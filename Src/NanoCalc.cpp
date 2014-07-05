@@ -31,6 +31,7 @@
 #include <Nano/Detail/ParseContext.hpp>
 #include <Nano/GlobalContext.hpp>
 #include <Nano/Interpreter.hpp>
+#include <Nano/Object/OperationError.hpp>
             
 namespace builtin
 {
@@ -48,7 +49,19 @@ int eval(nano::detail::ParseContext& pctx, nano::Interpreter& interpreter)
     int count = 0;
     while(nano::ast::Node::PtrT ast = pctx.parseOne())
     {
-        std::cout << interpreter.evaluateExpression(ast.get()).prettyString() << std::endl;
+        try
+        {
+            std::cout << interpreter.evaluateExpression(ast.get()).prettyString() << std::endl;
+        }
+        catch(nano::UnknownObjectError const& e)
+        {
+            std::cout << "Error: '" << e.objectName() << "' is unknown" <<  std::endl;
+        }
+        catch(nano::object::InvalidBinaryOperationError const& e)
+        {
+            std::cout << "Error: Can't apply operation '" << e.operation() << "' to objects of type '"
+                << e.lhsClass()->name() << "' and '" << e.rhsClass()->name() << "'" << std::endl;
+        }
         ++count;
     }
     return count;

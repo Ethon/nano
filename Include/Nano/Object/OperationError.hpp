@@ -80,7 +80,7 @@ namespace nano
                 return _lhsClass;
             }
             
-            Class const* rlhsClass() const
+            Class const* rhsClass() const
             {
                 return _rhsClass;
             }
