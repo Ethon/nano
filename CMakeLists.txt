@@ -42,8 +42,8 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/Lib/rapidxml-1.13/
 )
 
-# Compile nanoc.
-add_executable(nanoc
+# Compile LibNano.
+add_library(nano STATIC
     ${BisonOutput}
     ${FlexOutput}
     Src/Detail/ParseContext.cpp
@@ -54,12 +54,19 @@ add_executable(nanoc
     Src/Object/IntClass.cpp
     Src/Object/FloatClass.cpp
     Src/Object/NativeFunctionClass.cpp
-    #Src/Object/TupleClass.cpp
     
     Src/Gen/XmlGen.cpp
     
     Src/ObjectTable.cpp
     Src/GlobalContext.cpp
     Src/Interpreter.cpp
-    Src/Nanoc.cpp
+)
+
+# Compile NanoCalc
+add_executable(nanocalc
+    Src/NanoCalc.cpp
+)
+target_link_libraries(nanocalc
+    nano
+    readline
 )
