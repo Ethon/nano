@@ -37,7 +37,13 @@ namespace nano
         class Node
         {
         public:
-            typedef std::unique_ptr<Node> PtrT;
+            typedef std::shared_ptr<Node> PtrT;
+            
+            template<typename T, typename... Args>
+            inline static PtrT make(Args&&... args)
+            {
+                return std::make_shared<T>(std::forward<Args>(args)...);
+            }
             
         private:
             SourcePos _pos;

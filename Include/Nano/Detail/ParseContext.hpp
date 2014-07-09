@@ -59,7 +59,7 @@ namespace nano
             ErrorCallbackT _onLexerError;
             ErrorCallbackT _onParserError;
             LexerStorage _storage;
-            std::stack<std::unique_ptr<ast::Node>> _stack;
+            std::stack<ast::Node::PtrT> _stack;
             
             static void* createFileLexer(std::FILE* file, ParseContext* context);
             static void* createStringLexer(char const* string, ParseContext* context);
@@ -89,7 +89,7 @@ namespace nano
             template<typename T, typename... Args>
             void push(Args&&... args)
             {
-                push(ast::Node::PtrT(new T(std::forward<Args>(args)...)));
+                push(ast::Node::make<T>(std::forward<Args>(args)...));
             }
         };
     }

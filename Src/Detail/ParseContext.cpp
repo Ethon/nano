@@ -92,12 +92,12 @@ ParseContext::ParseContext(std::FILE* file, bool close)
         throw std::runtime_error("input file is null");
 }
 
-std::unique_ptr<Node> ParseContext::parseOne()
+Node::PtrT ParseContext::parseOne()
 {
     assert(_stack.empty());
     parseImpl(this);
     if(_stack.empty())
-        return std::unique_ptr<Node>();
+        return Node::PtrT();
     assert(_stack.size() == 1);
     return pop();
 }
@@ -117,14 +117,14 @@ void ParseContext::triggerLexerError(SourcePos const& pos, char const* s)
     _onLexerError(pos, s);
 }
 
-void ParseContext::push(std::unique_ptr<Node> node)
+void ParseContext::push(Node::PtrT node)
 {
     _stack.emplace(std::move(node));
 }
 
-std::unique_ptr<Node> ParseContext::pop()
+Node::PtrT ParseContext::pop()
 {
-    std::unique_ptr<Node> top = std::move(_stack.top());
+    Node::PtrT top = std::move(_stack.top());
     _stack.pop();
     return top;
 }
