@@ -12,6 +12,14 @@
 #include <Nano/Detail/Token.h>
 
 #define YY_EXTRA_TYPE nano::detail::ParseContext*
+
+// Disable warnings created by gcc for Flex code.
+#ifdef __GNUC__
+#   pragma GCC diagnostic push
+#   pragma GCC diagnostic ignored "-Wunused-parameter"
+#   pragma GCC diagnostic ignored "-Wunused-function"
+#endif
+
 %}
 
 BINDIGIT    0|1
@@ -60,6 +68,11 @@ if[ \t\n]       { return IF; }
 . yyextra->triggerLexerError(nano::SourcePos{yylloc->first_line, yylloc->first_column}, yytext);
 
 %%
+
+// Enable gcc warnings again.
+#ifdef __GNUC__
+#   pragma GCC diagnostic pop
+#endif
 
 void* nano::detail::ParseContext::createFileLexer(
         std::FILE* file,
