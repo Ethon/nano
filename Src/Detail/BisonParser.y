@@ -63,7 +63,7 @@ void yyerror(YYLTYPE* loc, void* ctx, char const* s);
 
 input
     : /* empty */
-    | Expression
+    | ExpressionStatement
 	;
     
 PrimaryExpression
@@ -151,9 +151,24 @@ AdditiveExpression
                 @1.first_line, @1.first_column, std::move(l), std::move(r));
         }
     ;
+   
+AssignmentExpression
+    : AdditiveExpression
+    | AdditiveExpression ASSIGN AssignmentExpression
+        {
+            auto r = context->pop(), l = context->pop();
+            context->push<nano::ast::AssignmentNode>(
+                @1.first_line, @1.first_column, std::move(l), std::move(r));
+        }
+    ;
     
 Expression
-    : AdditiveExpression
+    : AssignmentExpression
+    ;
+    
+ExpressionStatement
+    : Expression
+    | Expression SEMICOLON
     ;
 
 %%

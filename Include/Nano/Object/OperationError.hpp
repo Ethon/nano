@@ -109,6 +109,14 @@ namespace nano
                 return _args;
             }
         };
+        
+        class InvalidAssignment : public EvaluationError
+        {
+        public:
+            inline InvalidAssignment(SourcePos pos = SourcePos())
+                : EvaluationError(pos, "invalid assignment")
+            { }
+        };
     }
 }
 

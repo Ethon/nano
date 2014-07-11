@@ -132,6 +132,20 @@ public:
         _stack.pop_back();
         _stack.push_back(xn);
     }
+    
+    // Assignment AST:
+    virtual void accept(AssignmentNode* n) override
+    {
+        n->rhs()->visit(this);
+        n->lhs()->visit(this);
+        
+        xml_node<>* xn = _doc.allocate_node(node_element, "AssignmentNode");
+        xn->append_node(_stack.back());
+        _stack.pop_back();
+        xn->append_node(_stack.back());
+        _stack.pop_back();
+        _stack.push_back(xn);
+    }
             
     // Other Expression AST:
     virtual void accept(CallNode* n) override

@@ -25,6 +25,7 @@
 // Nano:
 #include <Nano/Interpreter.hpp>
 #include <Nano/Ast/All.hpp>
+#include <Nano/Object/OperationError.hpp>
 
 namespace
 {
@@ -105,6 +106,23 @@ namespace
             assert(_stack.size() >= 2);
             _stack[_stack.size() - 2] = nano::object::pow(_stack[_stack.size() - 2], _stack[_stack.size() - 1]);
             _stack.pop_back();
+        }
+        
+        // Assignment AST:
+        virtual void accept(nano::ast::AssignmentNode* n) override
+        {
+            n->rhs()->visit(this);
+            assert(_stack.size() >= 1);
+            
+            // Handle assignments to variables.
+            auto varNode = dynamic_cast<nano::ast::VarNode*>(n->lhs());
+            if(varNode)
+            {
+                _ctx.globalObjects().set(varNode->value(), _stack.back());
+                return;
+            }
+            
+            throw nano::object::InvalidAssignment();
         }
                 
         // Other Expression AST:

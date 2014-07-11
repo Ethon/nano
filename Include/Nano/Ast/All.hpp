@@ -26,5 +26,6 @@
 #include <Nano/Ast/BinaryArithmetic.hpp>
 #include <Nano/Ast/Call.hpp>
 #include <Nano/Ast/ExpressionList.hpp>
+#include <Nano/Ast/Assignment.hpp>
 
 #endif // HEADER_UUID_18DAB930D5654FE29CFE6B06C911B328

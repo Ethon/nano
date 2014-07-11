@@ -37,6 +37,9 @@ namespace nano
         class BinaryDivideNode;
         class BinaryPowerNode;
         
+        // Assignment AST:
+        class AssignmentNode;
+        
         // Other Expression AST:
         class CallNode;
         
@@ -56,6 +59,9 @@ namespace nano
             virtual void accept(BinaryMultiplyNode*) = 0;
             virtual void accept(BinaryDivideNode*) = 0;
             virtual void accept(BinaryPowerNode*) = 0;
+            
+            // Assignment AST:
+            virtual void accept(AssignmentNode*) = 0;
             
             // Other Expression AST:
             virtual void accept(CallNode*) = 0;
