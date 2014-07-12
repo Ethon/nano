@@ -20,6 +20,7 @@
 
 // C++ Standard Library:
 #include <vector>
+#include <sstream>
 
 // RapidXml:
 #include <rapidxml/rapidxml.hpp>
@@ -43,8 +44,10 @@ public:
     // Value AST:
     virtual void accept(IntNode* n) override
     {
+        std::ostringstream oss;
         xml_node<>* xn = _doc.allocate_node(node_element, "IntNode");
-        char* value = _doc.allocate_string(std::to_string(n->value()).c_str());
+        oss << n->value();
+        char* value = _doc.allocate_string(oss.str().c_str());
         xml_attribute<>* valueAttr = _doc.allocate_attribute("value", value);
         xn->append_attribute(valueAttr);
         _stack.push_back(xn);

@@ -55,7 +55,7 @@ nano::ObjectTable::ObjectTable(ObjectTable* parent)
     : _table(), _parent(parent)
 { }
 
-nano::object::Object& nano::ObjectTable::get(std::string const& name)
+nano::object::ObjectPtr& nano::ObjectTable::get(std::string const& name)
 {
     auto result =_table.get(name);
     if(!result)
@@ -63,7 +63,7 @@ nano::object::Object& nano::ObjectTable::get(std::string const& name)
     return result->obj;
 }
 
-nano::object::Object& nano::ObjectTable::set(std::string const& name, object::Object newValue, bool lock)
+nano::object::ObjectPtr& nano::ObjectTable::set(std::string const& name, object::ObjectPtr newValue, bool lock)
 {
     auto existing = _table.get(name);
     if(existing)

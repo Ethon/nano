@@ -26,6 +26,7 @@
 #include <Nano/Interpreter.hpp>
 #include <Nano/Ast/All.hpp>
 #include <Nano/Object/OperationError.hpp>
+#include <Nano/Object/Int.hpp>
 
 namespace
 {
@@ -33,14 +34,14 @@ namespace
     {
     private:
         nano::GlobalContext& _ctx;
-        std::vector<nano::object::Object> _stack;
+        std::vector<nano::object::ObjectPtr> _stack;
         
     public:
         AstInterpreter(nano::GlobalContext& ctx)
             : _ctx(ctx)
         { }
         
-        nano::object::Object& result()
+        nano::object::ObjectPtr& result()
         {
             assert(_stack.size() == 1);
             return _stack.back();
@@ -49,12 +50,12 @@ namespace
         // Value AST:
         virtual void accept(nano::ast::IntNode* n) override
         {
-            _stack.push_back(_ctx.getIntClass()->new_(n->value()));
+            _stack.push_back(std::make_shared<nano::object::IntObject>(n->value()));
         }
         
-        virtual void accept(nano::ast::FloatNode* n) override
+        virtual void accept(nano::ast::FloatNode*) override
         {
-            _stack.push_back(_ctx.getFloatClass()->new_(n->value()));
+            //_stack.push_back(_ctx.getFloatClass()->new_(n->value()));
         }
         
         virtual void accept(nano::ast::VarNode* n) override
@@ -133,7 +134,7 @@ namespace
             std::size_t firstArgIndex = _stack.size();
             n->args()->visit(this);
             std::size_t argCount = _stack.size() - firstArgIndex;
-            _stack[resultIndex] = _stack[resultIndex](_stack.data() + firstArgIndex, argCount);
+            _stack[resultIndex] = _stack[resultIndex]->call(_stack.data() + firstArgIndex, argCount);
             _stack.erase(_stack.begin() + firstArgIndex, _stack.end());
         }
         
@@ -150,7 +151,7 @@ nano::Interpreter::Interpreter(GlobalContext& ctx)
     : _ctx(ctx)
 { }
         
-nano::object::Object nano::Interpreter::evaluateExpression(ast::Node* expressionAst)
+nano::object::ObjectPtr nano::Interpreter::evaluateExpression(ast::Node* expressionAst)
 {
     AstInterpreter interpreter((_ctx));
     expressionAst->visit(&interpreter);

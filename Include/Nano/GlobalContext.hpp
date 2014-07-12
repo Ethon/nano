@@ -22,10 +22,6 @@
 #define HEADER_UUID_3B6C96A6E8304F83B0F54B5DEDF64FCF
 
 // Nano:
-#include <Nano/Util/StringHashtable.hpp>
-#include <Nano/Object/IntClass.hpp>
-#include <Nano/Object/FloatClass.hpp>
-#include <Nano/Object/NativeFunctionClass.hpp>
 #include <Nano/ObjectTable.hpp>
 
 namespace nano
@@ -33,21 +29,10 @@ namespace nano
     class GlobalContext
     {
     private:
-        object::ClassId _classIdCounter;
-        object::IntClass _intClass;
-        object::FloatClass _floatClass;
-        object::NativeFunctionClass _nativeFunctionClass;
         ObjectTable _globalObjects;
         
     public:
         GlobalContext();
-        
-        object::ClassId allocateClassId();
-        
-        // Get classes for builtin types:
-        object::IntClass const* getIntClass() const;
-        object::FloatClass const* getFloatClass() const;
-        object::NativeFunctionClass const* getNativeFunctionClass() const;
         
         ObjectTable& globalObjects();
     };

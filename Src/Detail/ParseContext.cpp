@@ -55,6 +55,29 @@ std::string const* LexerStorage::storeIdentifier(std::string identifier)
     return &(*iter);
 }
 
+object::CppIntType const* LexerStorage::storeIntLit(char const* str, unsigned base)
+{
+    if(base == 8 || base == 10 || base == 16)
+    {
+        auto iter = _intLits.emplace(object::CppIntType(str)).first;
+        return &(*iter);
+    }
+    else if(base == 2)
+    {
+        object::CppIntType result;
+        str += 2; // Skip 0b
+        for(; *str; ++str)
+        {
+            result *= 2;
+            result += (*str == '1');
+        }
+        auto iter = _intLits.emplace(std::move(result)).first;
+        return &(*iter);
+    }
+    else
+        assert(false);
+}
+
 ////
 // ParseContext implementation
 ////

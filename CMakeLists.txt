@@ -71,9 +71,7 @@ add_library(nano STATIC
     Src/Util/RawAllocator.cpp
     
     Src/Object/Object.cpp
-    Src/Object/IntClass.cpp
-    Src/Object/FloatClass.cpp
-    Src/Object/NativeFunctionClass.cpp
+    Src/Object/Int.cpp
     
     Src/Gen/XmlGen.cpp
     

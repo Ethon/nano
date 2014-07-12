@@ -23,11 +23,11 @@
 
 // C++ Standard Library:
 #include <string>
-#include <cstdint>
 
 // Nano:
 #include <Nano/Ast/Node.hpp>
 #include <Nano/Ast/Visitor.hpp>
+#include <Nano/Object/Int.hpp>
 
 namespace nano
 {
@@ -36,14 +36,14 @@ namespace nano
         class IntNode : public Node
         {
         private:
-            std::int64_t _val;
+            object::CppIntType _val;
             
         public:
-            inline IntNode(int line, int col, std::int64_t val)
-                : Node(line, col), _val(val)
+            inline IntNode(int line, int col, object::CppIntType val)
+                : Node(line, col), _val(std::move(val))
             { }
             
-            inline std::int64_t value()
+            inline object::CppIntType const& value()
             {
                 return _val;
             }

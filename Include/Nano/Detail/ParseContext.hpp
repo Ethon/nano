@@ -27,10 +27,12 @@
 #include <functional>
 #include <string>
 #include <unordered_set>
+#include <set>
 #include <stack>
 
 // Nano:
 #include <Nano/Ast/Node.hpp>
+#include <Nano/Object/Int.hpp>
 
 namespace nano
 {
@@ -40,9 +42,11 @@ namespace nano
         {
         private:
             std::unordered_set<std::string> _identifiers;
+            std::set<object::CppIntType> _intLits;
             
         public:
             std::string const* storeIdentifier(std::string identifier);
+            object::CppIntType const* storeIntLit(char const* str, unsigned base);
         };
         
         class ParseContext

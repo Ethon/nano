@@ -20,6 +20,7 @@
 
 // C++ Standard Library:
 #include <cassert>
+#include <sstream>
 
 // Nano:
 #include <Nano/Object/Object.hpp>
@@ -29,216 +30,112 @@
 // Class implementation
 ////
 
-nano::object::Class::Class(GlobalContext* globalContext, ClassId id, char const* name)
-    : _globalContext(globalContext), _id(id), _name(name)
-{ }
-            
 nano::object::Class::~Class()
 { }
 
-nano::GlobalContext* nano::object::Class::globalContext() const
+nano::object::ObjectPtr nano::object::Class::new_() const
 {
-    return _globalContext;
-}
-            
-nano::object::ClassId nano::object::Class::id() const
-{
-    return _id;
-}
-            
-char const* nano::object::Class::name() const
-{
-    return _name;
-}
-            
-bool nano::object::Class::is(Object const& o) const
-{
-    return o.class_()->id() == id();
+    throw InvalidConstructorCallError(shared_from_this(),
+        std::vector<ObjectPtr>());
 }
 
-std::string nano::object::Class::prettyString(Object const& obj) const
+nano::object::ObjectPtr nano::object::Class::new_(ObjectPtr* args, unsigned argCount) const
 {
-    assert(is(obj));
-   std::string result = "<Object of type '";
-   result += name();
-   return result += "'>";
-}
-
-nano::object::Object nano::object::Class::new_() const
-{
-    return new_(nullptr, 0);
-}
-
-nano::object::Object nano::object::Class::new_(Object* args, std::size_t argCount) const
-{
-    throw InvalidConstructorCallError(this, std::vector<Object>(args, args + argCount));
-}
-
-void nano::object::Class::copyData(Object const& obj, Object& target) const
-{   
-    assert(is(obj) && is(target));
-    target._data = obj._data;
-}
-
-void nano::object::Class::delete_(Object& obj) const
-{
-    assert(is(obj));
-    (void)obj;
-}
-
-nano::object::Object nano::object::Class::ladd(Object const& lhs, Object const& rhs) const
-{
-    return rhs.class_()->radd(lhs, rhs);
-}
-
-nano::object::Object nano::object::Class::radd(Object const& lhs, Object const& rhs) const
-{
-    throw InvalidBinaryOperationError("+", lhs.class_(), rhs.class_());
-}
-
-nano::object::Object nano::object::Class::lsub(Object const& lhs, Object const& rhs) const
-{
-    return rhs.class_()->rsub(lhs, rhs);
-}
-
-nano::object::Object nano::object::Class::rsub(Object const& lhs, Object const& rhs) const
-{
-    throw InvalidBinaryOperationError("-", lhs.class_(), rhs.class_());  
-}
-
-nano::object::Object nano::object::Class::lmul(Object const& lhs, Object const& rhs) const
-{
-    return rhs.class_()->rmul(lhs, rhs);
-}
-
-nano::object::Object nano::object::Class::rmul(Object const& lhs, Object const& rhs) const
-{
-    throw InvalidBinaryOperationError("*", lhs.class_(), rhs.class_());  
-}
-
-nano::object::Object nano::object::Class::ldiv(Object const& lhs, Object const& rhs) const
-{
-     return rhs.class_()->rdiv(lhs, rhs);   
-}
-
-nano::object::Object nano::object::Class::rdiv(Object const& lhs, Object const& rhs) const
-{
-    throw InvalidBinaryOperationError("/", lhs.class_(), rhs.class_());  
-}
-
-nano::object::Object nano::object::Class::pow(Object const& lhs, Object const& rhs) const
-{
-    throw InvalidBinaryOperationError("**", lhs.class_(), rhs.class_());  
-}
-
-nano::object::Object nano::object::Class::call(Object& obj, Object*, std::size_t) const
-{
-    throw InvalidOperationError("call", obj.class_());
+    throw InvalidConstructorCallError(shared_from_this(),
+        std::vector<ObjectPtr>(args, args + argCount));
 }
 
 ////
 // Object implementation
 ////
 
-#define ASSERT_VALID_OBJECT() assert(class_() && "Usage of invalidated object")
-
-nano::object::Object::Object(Class const* class_)
-    : _class(class_), _data()
-{
-    assert(class_);
-}
-
-nano::object::Object::Object(Class const* class_, Data data)
-    : _class(class_), _data(data)
-{
-    assert(class_);
-}
-
-nano::object::Object::Object(Object const& other)
-    : _class(other.class_()), _data()
-{
-    _class->copyData(other, *this);
-}
-
-nano::object::Object::Object(Object&& other)
-    : _class(other.class_()), _data(other._data)
-{
-    other._class = nullptr;
-}
-
-nano::object::Object& nano::object::Object::operator=(Object const& other)
-{
-    ASSERT_VALID_OBJECT();
-    if(this != &other)
-    {
-        class_()->delete_(*this);
-        _class = other._class;
-        _class->copyData(other, *this);
-    }
-    return *this;
-}
-
-nano::object::Object& nano::object::Object::operator=(Object&& other)
-{
-    ASSERT_VALID_OBJECT();
-    if(this != &other)
-    {
-        class_()->delete_(*this);
-        _class = other._class;
-        _data = other._data;
-        other._class = nullptr;
-    }
-    return *this;
-}
-
 nano::object::Object::~Object()
-{
-    if(class_())
-        class_()->delete_(*this);
-}
-
-nano::object::Class const* nano::object::Object::class_() const
-{
-    return _class;
-}
-
+{ }
+            
 std::string nano::object::Object::prettyString() const
 {
-    ASSERT_VALID_OBJECT();
-    return class_()->prettyString(*this);
+    std::ostringstream oss;
+    oss << '<' << class_()->name() << " object @ "
+        << this << '>';
+    return oss.str();
+}
+            
+nano::object::ObjectPtr nano::object::Object::ladd(ObjectPtr const& other)
+{
+    return radd(other);
 }
 
-nano::object::Object nano::object::Object::operator()(Object* args, std::size_t argCount)
+nano::object::ObjectPtr nano::object::Object::radd(ObjectPtr const& other)
 {
-    ASSERT_VALID_OBJECT();
-    return class_()->call(*this, args, argCount);
+    throw InvalidBinaryOperationError("+", shared_from_this(), other);
 }
+
+nano::object::ObjectPtr nano::object::Object::lsub(ObjectPtr const& other)
+{
+    return rsub(other);
+}
+
+nano::object::ObjectPtr nano::object::Object::rsub(ObjectPtr const& other)
+{
+    throw InvalidBinaryOperationError("-", shared_from_this(), other);
+}
+
+nano::object::ObjectPtr nano::object::Object::lmul(ObjectPtr const& other)
+{
+    return rmul(other);
+}
+
+nano::object::ObjectPtr nano::object::Object::rmul(ObjectPtr const& other)
+{
+    throw InvalidBinaryOperationError("*", shared_from_this(), other);
+}
+
+nano::object::ObjectPtr nano::object::Object::ldiv(ObjectPtr const& other)
+{
+    return rdiv(other);
+}
+
+nano::object::ObjectPtr nano::object::Object::rdiv(ObjectPtr const& other)
+{
+    throw InvalidBinaryOperationError("/", shared_from_this(), other);
+}
+
+nano::object::ObjectPtr nano::object::Object::pow(ObjectPtr const& exp)
+{
+    throw InvalidBinaryOperationError("**", shared_from_this(), exp);
+}
+            
+nano::object::ObjectPtr nano::object::Object::call(ObjectPtr*, unsigned)
+{
+    throw InvalidOperationError("call", shared_from_this());
+}
+
 
 ////
 // Object operator overloads and free functions.
 ////
 
-nano::object::Object nano::object::operator+(Object const& lhs, Object const& rhs)
+nano::object::ObjectPtr nano::object::operator+(ObjectPtr const& lhs, ObjectPtr const& rhs)
 {
-    return lhs.class_()->ladd(lhs, rhs);
+    return lhs->copy(true)->ladd(rhs);
 }
 
-nano::object::Object nano::object::operator-(Object const& lhs, Object const& rhs)
+nano::object::ObjectPtr nano::object::operator-(ObjectPtr const& lhs, ObjectPtr const& rhs)
 {
-    return lhs.class_()->lsub(lhs, rhs);
+    return lhs->copy(true)->lsub(rhs);
 }
 
-nano::object::Object nano::object::operator*(Object const& lhs, Object const& rhs)
+nano::object::ObjectPtr nano::object::operator*(ObjectPtr const& lhs, ObjectPtr const& rhs)
 {
-    return lhs.class_()->lmul(lhs, rhs);
+    return lhs->copy(true)->lmul(rhs);
 }
 
-nano::object::Object nano::object::operator/(Object const& lhs, Object const& rhs)
+nano::object::ObjectPtr nano::object::operator/(ObjectPtr const& lhs, ObjectPtr const& rhs)
 {
-    return lhs.class_()->ldiv(lhs, rhs);
+    return lhs->copy(true)->ldiv(rhs);
 }
 
-nano::object::Object nano::object::pow(Object const& base, Object const& exp)
+nano::object::ObjectPtr nano::object::pow(ObjectPtr const& base, ObjectPtr const& exp)
 {
-    return base.class_()->pow(base, exp);
+    return base->copy(true)->lsub(exp);
 }

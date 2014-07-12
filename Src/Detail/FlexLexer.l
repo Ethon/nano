@@ -56,11 +56,11 @@ if[ \t\n]       { return IF; }
 \*\*    { return POWER; }
 
 
-0(b|B){BINDIGIT}+           {yylval->ival = std::strtoll(yytext + 2, nullptr, 2); return INT_LIT;}
-0{OCTDIGIT}+                {yylval->ival = std::strtoll(yytext + 1, nullptr, 8); return INT_LIT;}
-0(x|X){HEXDIGIT}+           {yylval->ival = std::strtoll(yytext + 2, nullptr, 16); return INT_LIT;}
+0(b|B){BINDIGIT}+           {yylval->ival = yyextra->storage().storeIntLit(yytext, 2); return INT_LIT;}
+0{OCTDIGIT}+                {yylval->ival = yyextra->storage().storeIntLit(yytext, 8); return INT_LIT;}
+0(x|X){HEXDIGIT}+           {yylval->ival = yyextra->storage().storeIntLit(yytext, 16); return INT_LIT;}
 {DECDIGIT}+"."{DECDIGIT}+   {yylval->fval = std::strtod(yytext, nullptr); return FP_LIT;}
-{DECDIGIT}+                 {yylval->ival = std::strtoll(yytext, nullptr, 10); return INT_LIT;}
+{DECDIGIT}+                 {yylval->ival = yyextra->storage().storeIntLit(yytext, 10); return INT_LIT;}
 ({ALPHA}|_)({ALPHANUM}|_)*  {yylval->sval = yyextra->storage().storeIdentifier(std::string(yytext, yytext + yyleng)); return IDENT;}
 
 [ \t\n]+          /* eat up whitespace */

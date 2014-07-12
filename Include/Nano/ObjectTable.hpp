@@ -55,7 +55,7 @@ namespace nano
     private:
         struct Entry
         {
-            object::Object obj;
+            object::ObjectPtr obj;
             bool locked;
         };
         typedef util::StringHashtable<char, Entry, util::ArenaAllocator> TableType;
@@ -65,8 +65,8 @@ namespace nano
     public:
         explicit ObjectTable(ObjectTable* parent = nullptr);
         
-        object::Object& get(std::string const& name);
-        object::Object& set(std::string const& name, object::Object newValue, bool lock = false);
+        object::ObjectPtr& get(std::string const& name);
+        object::ObjectPtr& set(std::string const& name, object::ObjectPtr newValue, bool lock = false);
         bool has(std::string const& name) const;
         
         bool isLocked(std::string const& name);

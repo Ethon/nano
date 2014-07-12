@@ -35,7 +35,7 @@ namespace nano
     public:
         explicit Interpreter(GlobalContext& ctx);
         
-        object::Object evaluateExpression(ast::Node* expressionAst);
+        object::ObjectPtr evaluateExpression(ast::Node* expressionAst);
     };
 }
 

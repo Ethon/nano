@@ -26,32 +26,8 @@
 ////
 
 nano::GlobalContext::GlobalContext()
-    : _classIdCounter(1),
-      _intClass(this, allocateClassId()),
-      _floatClass(this, allocateClassId()),
-      _nativeFunctionClass(this, allocateClassId()),
-      _globalObjects()
+    : _globalObjects()
 { }
-        
-nano::object::ClassId nano::GlobalContext::allocateClassId()
-{
-    return _classIdCounter++; 
-}
-
-nano::object::IntClass const* nano::GlobalContext::getIntClass() const
-{
-    return &_intClass;
-}
-
-nano::object::FloatClass const* nano::GlobalContext::getFloatClass() const
-{
-    return &_floatClass;
-}
-
-nano::object::NativeFunctionClass const* nano::GlobalContext::getNativeFunctionClass() const
-{
-    return &_nativeFunctionClass;
-}
 
 nano::ObjectTable& nano::GlobalContext::globalObjects()
 {

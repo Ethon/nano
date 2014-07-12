@@ -32,14 +32,16 @@
 #include <Nano/GlobalContext.hpp>
 #include <Nano/Interpreter.hpp>
 #include <Nano/Object/OperationError.hpp>
+#include <Nano/Object/Int.hpp>
             
 namespace builtin
 {
-    nano::object::Object acc(nano::object::Object& callee, nano::object::Object* args, std::size_t count)
+    nano::object::ObjectPtr acc(nano::object::ObjectPtr&,
+            nano::object::ObjectPtr* args, std::size_t count)
     {
-        nano::object::Object sum = callee.class_()->globalContext()->getIntClass()->new_(0);
+        nano::object::ObjectPtr sum = std::make_shared<nano::object::IntObject>();
         for(std::size_t i = 0; i < count; ++i)
-            sum = sum + *(args  + i);
+            sum = sum + *(args + i);
         return sum;
     }
 }
@@ -51,7 +53,7 @@ int eval(nano::detail::ParseContext& pctx, nano::Interpreter& interpreter)
     {
         try
         {
-            std::cout << interpreter.evaluateExpression(ast.get()).prettyString() << std::endl;
+            std::cout << interpreter.evaluateExpression(ast.get())->prettyString() << std::endl;
         }
         catch(nano::UnknownObjectError const& e)
         {
@@ -60,7 +62,7 @@ int eval(nano::detail::ParseContext& pctx, nano::Interpreter& interpreter)
         catch(nano::object::InvalidBinaryOperationError const& e)
         {
             std::cout << "Error: Can't apply operation '" << e.operation() << "' to objects of type '"
-                << e.lhsClass()->name() << "' and '" << e.rhsClass()->name() << "'" << std::endl;
+                << e.lhs()->class_()->name() << "' and '" << e.rhs()->class_()->name() << "'" << std::endl;
         }
         ++count;
     }
@@ -71,7 +73,6 @@ int main(int argc, char** argv)
 {
     nano::GlobalContext gctx;
     nano::Interpreter interpreter((gctx));
-    gctx.globalObjects().set("acc", gctx.getNativeFunctionClass()->new_("acc", builtin::acc));
     
     if(argc == 2)
     {

@@ -20,7 +20,7 @@ void yyerror(YYLTYPE* loc, void* ctx, char const* s);
 
 %union
 {
-    std::int64_t ival;
+    nano::object::CppIntType const* ival;
     double fval;
     std::string const* sval;
 }
@@ -67,7 +67,7 @@ input
 	;
     
 PrimaryExpression
-    : INT_LIT { context->push<nano::ast::IntNode>(@1.first_line, @1.first_column, $1); }
+    : INT_LIT { context->push<nano::ast::IntNode>(@1.first_line, @1.first_column, *$1); }
     | FP_LIT { context->push<nano::ast::FloatNode>(@1.first_line, @1.first_column, $1); }
     | IDENT { context->push<nano::ast::VarNode>(@1.first_line, @1.first_column, *$1); }
     | OPAREN Expression CPAREN

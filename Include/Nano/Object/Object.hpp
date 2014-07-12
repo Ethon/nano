@@ -22,9 +22,11 @@
 #define HEADER_UUID_AF709BAFD56C482889F8D7B055BDA71A
 
 // C++ Standard Library:
-#include <cstdint>
 #include <string>
-#include <functional>
+#include <memory>
+
+// Nano:
+#include <Nano/Object/BuiltinClassIds.hpp>
 
 namespace nano
 {
@@ -33,120 +35,53 @@ namespace nano
     namespace object
     {
         struct Object;
+        typedef std::shared_ptr<Object> ObjectPtr;
         
-        typedef std::uint32_t ClassId;
-        class Class
+        class Class : public std::enable_shared_from_this<Class>
         {
-        protected:
-            GlobalContext* _globalContext;
-            ClassId _id;
-            char const* _name;
-            
         public:
-            Class(GlobalContext* globalContext, ClassId id, char const* name);
             virtual ~Class();
             
-            GlobalContext* globalContext() const;
+            virtual ClassId id() const = 0;
+            virtual char const* name() const = 0;
             
-            ClassId id() const;
-            char const* name() const;
-            bool is(Object const& o) const;
-            
-            virtual std::string prettyString(Object const& o) const;
-            
-            virtual Object new_() const;
-            virtual Object new_(Object* args, std::size_t argCount) const;
-            virtual void copyData(Object const& obj, Object& target) const;
-            virtual void delete_(Object& obj) const;
-            
-            virtual Object ladd(Object const& lhs, Object const& rhs) const;
-            virtual Object radd(Object const& lhs, Object const& rhs) const;
-            virtual Object lsub(Object const& lhs, Object const& rhs) const;
-            virtual Object rsub(Object const& lhs, Object const& rhs) const;
-            virtual Object lmul(Object const& lhs, Object const& rhs) const;
-            virtual Object rmul(Object const& lhs, Object const& rhs) const;
-            virtual Object ldiv(Object const& lhs, Object const& rhs) const;
-            virtual Object rdiv(Object const& lhs, Object const& rhs) const;
-            virtual Object pow(Object const& lhs, Object const& rhs) const;
-            
-            virtual Object call(Object& obj, Object* args, std::size_t argCount) const;
+            virtual ObjectPtr new_() const;
+            virtual ObjectPtr new_(ObjectPtr* args, unsigned argCount) const;
         };
+        typedef std::shared_ptr<Class const> ClassPtr;
         
-        class Object
+        class Object : public std::enable_shared_from_this<Object>
         {
-        private:
-            Class const* _class;
-            
         public:
-            struct RefCountedData
-            {
-                int refCount;
-                
-                inline RefCountedData()
-                    : refCount(1)
-                { }
-                
-                inline void ref()
-                {
-                    ++refCount;
-                }
-                
-                inline void unref()
-                {
-                    --refCount;
-                }
-                
-                inline bool isLastRef() const
-                {
-                    return refCount == 1;
-                }
-            };
+            virtual ~Object();
             
-            struct TupleData;
-            struct NativeFunctionData : public RefCountedData
-            {
-                std::string name;
-                std::function<Object (Object&, Object*, std::size_t)> function;
-            };
+            // Management:
+            virtual ClassPtr const& class_() const = 0;
+            virtual ObjectPtr copy(bool deep) const = 0;
             
-            // Needs to be public so the class objects can work with it.
-            // Do not abuse it!
-            union Data
-            {
-                std::int64_t intval;
-                double floatval;
-                int boolval;
-                TupleData* tupleval;
-                Class const* classval;
-                NativeFunctionData* nfunctionval;
-            } _data;
+            // Operations:
+            virtual std::string prettyString() const;
             
-            explicit Object(Class const* class_);
-            Object(Class const* class_, Data data);
-            Object(Object const& other);
-            Object(Object&& other);
-            Object& operator=(Object const& other);
-            Object& operator=(Object&& other);
-            ~Object();
+            // Binary Arithmetic:
+            virtual ObjectPtr ladd(ObjectPtr const& other);
+            virtual ObjectPtr radd(ObjectPtr const& other);
+            virtual ObjectPtr lsub(ObjectPtr const& other);
+            virtual ObjectPtr rsub(ObjectPtr const& other);
+            virtual ObjectPtr lmul(ObjectPtr const& other);
+            virtual ObjectPtr rmul(ObjectPtr const& other);
+            virtual ObjectPtr ldiv(ObjectPtr const& other);
+            virtual ObjectPtr rdiv(ObjectPtr const& other);
+            virtual ObjectPtr pow(ObjectPtr const& exp);
             
-            Class const* class_() const;
-            
-            std::string prettyString() const;
-            
-            Object operator()(Object* args, std::size_t argCount);
+            // Other Expressions:
+            virtual ObjectPtr call(ObjectPtr* args, unsigned argCount);
         };
         
-        struct Object::TupleData : public RefCountedData
-        {
-                std::size_t length;
-                Object elements[1];
-        };
-        
-        Object operator+(Object const& lhs, Object const& rhs);
-        Object operator-(Object const& lhs, Object const& rhs);
-        Object operator*(Object const& lhs, Object const& rhs);
-        Object operator/(Object const& lhs, Object const& rhs);
-        Object pow(Object const& base, Object const& exp);
+        ObjectPtr operator+(ObjectPtr const& lhs, ObjectPtr const& rhs);
+        ObjectPtr operator-(ObjectPtr const& lhs, ObjectPtr const& rhs);
+        ObjectPtr operator*(ObjectPtr const& lhs, ObjectPtr const& rhs);
+        ObjectPtr operator/(ObjectPtr const& lhs, ObjectPtr const& rhs);
+        ObjectPtr pow(ObjectPtr const& base, ObjectPtr const& exp);
     }
 }
 

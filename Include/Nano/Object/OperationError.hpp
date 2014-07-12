@@ -36,13 +36,13 @@ namespace nano
         {
         private:
             char const* _operation;
-            Class const* _objectClass;
+            ObjectPtr _object;
             
         public:
-            inline InvalidOperationError(char const* operation, Class const* objectClass,
+            inline InvalidOperationError(char const* operation, ObjectPtr object,
                     SourcePos pos = SourcePos())
                 : EvaluationError(pos, "invalid operation"),
-                  _operation(operation), _objectClass(objectClass)
+                  _operation(operation), _object(std::move(object))
             { }
             
             char const* operation() const
@@ -50,9 +50,9 @@ namespace nano
                 return _operation;
             }
             
-            Class const* objectClass() const
+            ObjectPtr const& object() const
             {
-                return _objectClass;
+                return _object;
             }
         };
         
@@ -60,14 +60,14 @@ namespace nano
         {
         private:
             char const* _operation;
-            Class const* _lhsClass;
-            Class const* _rhsClass;
+            ObjectPtr _lhs;
+            ObjectPtr _rhs;
             
         public:
-            inline InvalidBinaryOperationError(char const* operation, Class const* lhsClass,
-                    Class const* rhsClass, SourcePos pos = SourcePos())
+            inline InvalidBinaryOperationError(char const* operation, ObjectPtr lhs,
+                    ObjectPtr rhs, SourcePos pos = SourcePos())
                 : EvaluationError(pos, "invalid binary operation"),
-                  _operation(operation), _lhsClass(lhsClass), _rhsClass(rhsClass)
+                  _operation(operation), _lhs(std::move(lhs)), _rhs(std::move(rhs))
             { }
             
             char const* operation() const
@@ -75,36 +75,36 @@ namespace nano
                 return _operation;
             }
             
-            Class const* lhsClass() const
+            ObjectPtr const& lhs() const
             {
-                return _lhsClass;
+                return _lhs;
             }
             
-            Class const* rhsClass() const
+            ObjectPtr const& rhs() const
             {
-                return _rhsClass;
+                return _rhs;
             }
         };
         
         class InvalidConstructorCallError : public EvaluationError
         {
         private:
-            Class const* _class;
-            std::vector<Object> _args;
+            ClassPtr _class;
+            std::vector<ObjectPtr> _args;
             
         public:
-            inline InvalidConstructorCallError(Class const* class_, std::vector<Object>&& args,
+            inline InvalidConstructorCallError(ClassPtr class_, std::vector<ObjectPtr> args,
                     SourcePos pos = SourcePos())
                 : EvaluationError(pos, "invalid constructor call"),
-                  _class(class_), _args(std::move(args))
+                  _class(std::move(class_)), _args(std::move(args))
             { }
             
-            Class const* class_() const
+            ClassPtr const& class_() const
             {
                 return _class;
             }
             
-            std::vector<Object> const& args() const
+            std::vector<ObjectPtr> const& args() const
             {
                 return _args;
             }
