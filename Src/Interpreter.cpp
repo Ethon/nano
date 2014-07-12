@@ -50,12 +50,12 @@ namespace
         // Value AST:
         virtual void accept(nano::ast::IntNode* n) override
         {
-            _stack.push_back(std::make_shared<nano::object::IntObject>(n->value()));
+            _stack.push_back(nano::object::allocate<nano::object::IntObject>(n->value()));
         }
         
-        virtual void accept(nano::ast::FloatNode*) override
+        virtual void accept(nano::ast::FloatNode* n) override
         {
-            //_stack.push_back(_ctx.getFloatClass()->new_(n->value()));
+            _stack.push_back(nano::object::allocate<nano::object::FloatObject>(n->value()));
         }
         
         virtual void accept(nano::ast::VarNode* n) override

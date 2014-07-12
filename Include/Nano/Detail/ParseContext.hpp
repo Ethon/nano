@@ -33,6 +33,7 @@
 // Nano:
 #include <Nano/Ast/Node.hpp>
 #include <Nano/Object/Int.hpp>
+#include <Nano/Object/Float.hpp>
 
 namespace nano
 {
@@ -43,10 +44,12 @@ namespace nano
         private:
             std::unordered_set<std::string> _identifiers;
             std::set<object::CppIntType> _intLits;
+            std::set<object::CppFloatType> _floatLits;
             
         public:
             std::string const* storeIdentifier(std::string identifier);
             object::CppIntType const* storeIntLit(char const* str, unsigned base);
+            object::CppFloatType const* storeFloatLit(char const* str);
         };
         
         class ParseContext

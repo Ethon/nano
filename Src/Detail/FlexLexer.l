@@ -59,7 +59,7 @@ if[ \t\n]       { return IF; }
 0(b|B){BINDIGIT}+           {yylval->ival = yyextra->storage().storeIntLit(yytext, 2); return INT_LIT;}
 0{OCTDIGIT}+                {yylval->ival = yyextra->storage().storeIntLit(yytext, 8); return INT_LIT;}
 0(x|X){HEXDIGIT}+           {yylval->ival = yyextra->storage().storeIntLit(yytext, 16); return INT_LIT;}
-{DECDIGIT}+"."{DECDIGIT}+   {yylval->fval = std::strtod(yytext, nullptr); return FP_LIT;}
+{DECDIGIT}+"."{DECDIGIT}+   {yylval->fval = yyextra->storage().storeFloatLit(yytext); return FP_LIT;}
 {DECDIGIT}+                 {yylval->ival = yyextra->storage().storeIntLit(yytext, 10); return INT_LIT;}
 ({ALPHA}|_)({ALPHANUM}|_)*  {yylval->sval = yyextra->storage().storeIdentifier(std::string(yytext, yytext + yyleng)); return IDENT;}
 

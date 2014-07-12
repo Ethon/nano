@@ -21,7 +21,7 @@ void yyerror(YYLTYPE* loc, void* ctx, char const* s);
 %union
 {
     nano::object::CppIntType const* ival;
-    double fval;
+    nano::object::CppFloatType const* fval;
     std::string const* sval;
 }
 
@@ -68,7 +68,7 @@ input
     
 PrimaryExpression
     : INT_LIT { context->push<nano::ast::IntNode>(@1.first_line, @1.first_column, *$1); }
-    | FP_LIT { context->push<nano::ast::FloatNode>(@1.first_line, @1.first_column, $1); }
+    | FP_LIT { context->push<nano::ast::FloatNode>(@1.first_line, @1.first_column, *$1); }
     | IDENT { context->push<nano::ast::VarNode>(@1.first_line, @1.first_column, *$1); }
     | OPAREN Expression CPAREN
     ;
@@ -177,7 +177,6 @@ void yyerror(YYLTYPE* loc, void* ctx, char const* s)
 {
     static_cast<nano::detail::ParseContext*>(ctx)->triggerParserError(
         nano::SourcePos{loc->first_line, loc->first_column}, s);
-    
 }
 
 int nano::detail::ParseContext::parseImpl(nano::detail::ParseContext* ctx)

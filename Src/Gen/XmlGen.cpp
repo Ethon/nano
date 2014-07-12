@@ -20,7 +20,6 @@
 
 // C++ Standard Library:
 #include <vector>
-#include <sstream>
 
 // RapidXml:
 #include <rapidxml/rapidxml.hpp>
@@ -44,10 +43,8 @@ public:
     // Value AST:
     virtual void accept(IntNode* n) override
     {
-        std::ostringstream oss;
         xml_node<>* xn = _doc.allocate_node(node_element, "IntNode");
-        oss << n->value();
-        char* value = _doc.allocate_string(oss.str().c_str());
+        char* value = _doc.allocate_string(n->value().str().c_str());
         xml_attribute<>* valueAttr = _doc.allocate_attribute("value", value);
         xn->append_attribute(valueAttr);
         _stack.push_back(xn);
@@ -56,7 +53,7 @@ public:
     virtual void accept(FloatNode* n) override
     {
         xml_node<>* xn = _doc.allocate_node(node_element, "FloatNode");
-        char* value = _doc.allocate_string(std::to_string(n->value()).c_str());
+        char* value = _doc.allocate_string(n->value().str(0, std::ios_base::fixed).c_str());
         xml_attribute<>* valueAttr = _doc.allocate_attribute("value", value);
         xn->append_attribute(valueAttr);
         _stack.push_back(xn);

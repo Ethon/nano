@@ -72,6 +72,7 @@ add_library(nano STATIC
     
     Src/Object/Object.cpp
     Src/Object/Int.cpp
+    Src/Object/Float.cpp
     
     Src/Gen/XmlGen.cpp
     

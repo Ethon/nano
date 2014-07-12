@@ -24,6 +24,7 @@
 // C++ Standard Library:
 #include <string>
 #include <memory>
+#include <type_traits>
 
 // Nano:
 #include <Nano/Object/BuiltinClassIds.hpp>
@@ -36,6 +37,7 @@ namespace nano
     {
         struct Object;
         typedef std::shared_ptr<Object> ObjectPtr;
+        typedef std::shared_ptr<Object const> ConstObjectPtr;
         
         class Class : public std::enable_shared_from_this<Class>
         {
@@ -63,15 +65,15 @@ namespace nano
             virtual std::string prettyString() const;
             
             // Binary Arithmetic:
-            virtual ObjectPtr ladd(ObjectPtr const& other);
-            virtual ObjectPtr radd(ObjectPtr const& other);
-            virtual ObjectPtr lsub(ObjectPtr const& other);
-            virtual ObjectPtr rsub(ObjectPtr const& other);
-            virtual ObjectPtr lmul(ObjectPtr const& other);
-            virtual ObjectPtr rmul(ObjectPtr const& other);
-            virtual ObjectPtr ldiv(ObjectPtr const& other);
-            virtual ObjectPtr rdiv(ObjectPtr const& other);
-            virtual ObjectPtr pow(ObjectPtr const& exp);
+            virtual ObjectPtr ladd(ObjectPtr const& other) const;
+            virtual ObjectPtr radd(ObjectPtr const& other) const;
+            virtual ObjectPtr lsub(ObjectPtr const& other) const;
+            virtual ObjectPtr rsub(ObjectPtr const& other) const;
+            virtual ObjectPtr lmul(ObjectPtr const& other) const;
+            virtual ObjectPtr rmul(ObjectPtr const& other) const;
+            virtual ObjectPtr ldiv(ObjectPtr const& other) const;
+            virtual ObjectPtr rdiv(ObjectPtr const& other) const;
+            virtual ObjectPtr pow(ObjectPtr const& exp) const;
             
             // Other Expressions:
             virtual ObjectPtr call(ObjectPtr* args, unsigned argCount);
@@ -82,6 +84,12 @@ namespace nano
         ObjectPtr operator*(ObjectPtr const& lhs, ObjectPtr const& rhs);
         ObjectPtr operator/(ObjectPtr const& lhs, ObjectPtr const& rhs);
         ObjectPtr pow(ObjectPtr const& base, ObjectPtr const& exp);
+        
+        template<typename T, typename... Args>
+        ObjectPtr allocate(Args&&... args)
+        {
+            return std::make_shared<T>(std::forward<Args>(args)...);
+        }
     }
 }
 

@@ -78,6 +78,12 @@ object::CppIntType const* LexerStorage::storeIntLit(char const* str, unsigned ba
         assert(false);
 }
 
+object::CppFloatType const* LexerStorage::storeFloatLit(char const* str)
+{
+    auto iter = _floatLits.emplace(str).first;
+    return &(*iter);
+}
+
 ////
 // ParseContext implementation
 ////

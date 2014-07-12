@@ -36,10 +36,10 @@ namespace nano
         {
         private:
             char const* _operation;
-            ObjectPtr _object;
+            ConstObjectPtr _object;
             
         public:
-            inline InvalidOperationError(char const* operation, ObjectPtr object,
+            inline InvalidOperationError(char const* operation, ConstObjectPtr object,
                     SourcePos pos = SourcePos())
                 : EvaluationError(pos, "invalid operation"),
                   _operation(operation), _object(std::move(object))
@@ -50,7 +50,7 @@ namespace nano
                 return _operation;
             }
             
-            ObjectPtr const& object() const
+            ConstObjectPtr const& object() const
             {
                 return _object;
             }
@@ -60,12 +60,12 @@ namespace nano
         {
         private:
             char const* _operation;
-            ObjectPtr _lhs;
-            ObjectPtr _rhs;
+            ConstObjectPtr _lhs;
+            ConstObjectPtr _rhs;
             
         public:
-            inline InvalidBinaryOperationError(char const* operation, ObjectPtr lhs,
-                    ObjectPtr rhs, SourcePos pos = SourcePos())
+            inline InvalidBinaryOperationError(char const* operation, ConstObjectPtr lhs,
+                    ConstObjectPtr rhs, SourcePos pos = SourcePos())
                 : EvaluationError(pos, "invalid binary operation"),
                   _operation(operation), _lhs(std::move(lhs)), _rhs(std::move(rhs))
             { }
@@ -75,12 +75,12 @@ namespace nano
                 return _operation;
             }
             
-            ObjectPtr const& lhs() const
+            ConstObjectPtr const& lhs() const
             {
                 return _lhs;
             }
             
-            ObjectPtr const& rhs() const
+            ConstObjectPtr const& rhs() const
             {
                 return _rhs;
             }

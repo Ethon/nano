@@ -28,6 +28,7 @@
 #include <Nano/Ast/Node.hpp>
 #include <Nano/Ast/Visitor.hpp>
 #include <Nano/Object/Int.hpp>
+#include <Nano/Object/Float.hpp>
 
 namespace nano
 {
@@ -57,14 +58,14 @@ namespace nano
         class FloatNode : public Node
         {
         private:
-            double _val;
+            object::CppFloatType _val;
             
         public:
-            inline FloatNode(int line, int col, double val)
-                : Node(line, col), _val(val)
+            inline FloatNode(int line, int col, object::CppFloatType val)
+                : Node(line, col), _val(std::move(val))
             { }
             
-            inline double value()
+            inline object::CppFloatType const& value()
             {
                 return _val;
             }

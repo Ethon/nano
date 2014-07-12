@@ -60,47 +60,47 @@ std::string nano::object::Object::prettyString() const
     return oss.str();
 }
             
-nano::object::ObjectPtr nano::object::Object::ladd(ObjectPtr const& other)
+nano::object::ObjectPtr nano::object::Object::ladd(ObjectPtr const& other) const
 {
     return radd(other);
 }
 
-nano::object::ObjectPtr nano::object::Object::radd(ObjectPtr const& other)
+nano::object::ObjectPtr nano::object::Object::radd(ObjectPtr const& other) const
 {
     throw InvalidBinaryOperationError("+", shared_from_this(), other);
 }
 
-nano::object::ObjectPtr nano::object::Object::lsub(ObjectPtr const& other)
+nano::object::ObjectPtr nano::object::Object::lsub(ObjectPtr const& other) const
 {
     return rsub(other);
 }
 
-nano::object::ObjectPtr nano::object::Object::rsub(ObjectPtr const& other)
+nano::object::ObjectPtr nano::object::Object::rsub(ObjectPtr const& other) const
 {
     throw InvalidBinaryOperationError("-", shared_from_this(), other);
 }
 
-nano::object::ObjectPtr nano::object::Object::lmul(ObjectPtr const& other)
+nano::object::ObjectPtr nano::object::Object::lmul(ObjectPtr const& other) const
 {
     return rmul(other);
 }
 
-nano::object::ObjectPtr nano::object::Object::rmul(ObjectPtr const& other)
+nano::object::ObjectPtr nano::object::Object::rmul(ObjectPtr const& other) const
 {
     throw InvalidBinaryOperationError("*", shared_from_this(), other);
 }
 
-nano::object::ObjectPtr nano::object::Object::ldiv(ObjectPtr const& other)
+nano::object::ObjectPtr nano::object::Object::ldiv(ObjectPtr const& other) const
 {
     return rdiv(other);
 }
 
-nano::object::ObjectPtr nano::object::Object::rdiv(ObjectPtr const& other)
+nano::object::ObjectPtr nano::object::Object::rdiv(ObjectPtr const& other) const
 {
     throw InvalidBinaryOperationError("/", shared_from_this(), other);
 }
 
-nano::object::ObjectPtr nano::object::Object::pow(ObjectPtr const& exp)
+nano::object::ObjectPtr nano::object::Object::pow(ObjectPtr const& exp) const
 {
     throw InvalidBinaryOperationError("**", shared_from_this(), exp);
 }
@@ -117,25 +117,25 @@ nano::object::ObjectPtr nano::object::Object::call(ObjectPtr*, unsigned)
 
 nano::object::ObjectPtr nano::object::operator+(ObjectPtr const& lhs, ObjectPtr const& rhs)
 {
-    return lhs->copy(true)->ladd(rhs);
+    return lhs->ladd(rhs);
 }
 
 nano::object::ObjectPtr nano::object::operator-(ObjectPtr const& lhs, ObjectPtr const& rhs)
 {
-    return lhs->copy(true)->lsub(rhs);
+    return lhs->lsub(rhs);
 }
 
 nano::object::ObjectPtr nano::object::operator*(ObjectPtr const& lhs, ObjectPtr const& rhs)
 {
-    return lhs->copy(true)->lmul(rhs);
+    return lhs->lmul(rhs);
 }
 
 nano::object::ObjectPtr nano::object::operator/(ObjectPtr const& lhs, ObjectPtr const& rhs)
 {
-    return lhs->copy(true)->ldiv(rhs);
+    return lhs->ldiv(rhs);
 }
 
 nano::object::ObjectPtr nano::object::pow(ObjectPtr const& base, ObjectPtr const& exp)
 {
-    return base->copy(true)->lsub(exp);
+    return base->pow(exp);
 }
