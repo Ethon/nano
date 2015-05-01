@@ -1,4 +1,4 @@
-// Copyright (c) <2014> <Florian Erler>
+// Copyright (c) <2014-2015> <Florian Erler>
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from
@@ -18,8 +18,7 @@
 //
 // 3. This notice may not be removed or altered from any source distribution.
 
-#ifndef HEADER_UUID_A466AF444E4647D9A79A5C5A44035CB3
-#define HEADER_UUID_A466AF444E4647D9A79A5C5A44035CB3
+#pragma once
 
 // C++ Standard Library:
 #include <memory>
@@ -27,64 +26,66 @@
 // Nano:
 #include <Nano/Common/SourcePos.hpp>
 #include <Nano/Object/Object.hpp>
+#include <Nano/Type/Type.hpp>
 
-namespace nano
-{
-    namespace ast
-    {
-        class Visitor;
-        
-        class Node
-        {
-        public:
-            typedef std::shared_ptr<Node> PtrT;
-            
-            template<typename T, typename... Args>
-            inline static PtrT make(Args&&... args)
-            {
-                return std::make_shared<T>(std::forward<Args>(args)...);
-            }
-            
-        private:
+namespace nano {
+   namespace ast {
+      class Visitor;
+
+      class Node {
+      public:
+         typedef std::shared_ptr<Node> PtrT;
+
+         template<typename T, typename... Args>
+         inline static PtrT make(Args&&... args) {
+            return std::make_shared<T>(std::forward<Args>(args)...);
+         }
+
+         private:
             SourcePos _pos;
-            
-        public:
+
+         public:
             inline Node(int line, int col)
-                : _pos{line, col}
+               : _pos{line, col}
             { }
-            
+
             inline virtual ~Node()
             { }
-            
-            inline SourcePos const& pos() const
-            {
-                return _pos;
-            }
-            
-            virtual void visit(Visitor* v) = 0;
-        };
-        
-        class BinaryExpressionNode : public Node
-        {
-        private:
-            PtrT _lhs, _rhs;
-            
-        public:
-            inline BinaryExpressionNode(int line, int col, PtrT lhs, PtrT rhs)
-                : Node(line, col), _lhs(std::move(lhs)), _rhs(std::move(rhs))
-            { }
-            
-            inline Node* lhs()
-            {
-                return _lhs.get();
-            }
-            
-            inline Node* rhs()
-            {
-                return _rhs.get();
-            }
-        };
-    }
-}
 
-#endif // HEADER_UUID_A466AF444E4647D9A79A5C5A44035CB3
+            inline SourcePos const& pos() const {
+               return _pos;
+            }
+
+            virtual void visit(Visitor* v) = 0;
+      };
+
+      class ExpressionNode : public Node {
+      private:
+         type::Type* type;
+
+      public:
+         inline ExpressionNode(int line, int col)
+            : Node(line, col)
+         { }
+      };
+
+      class BinaryExpressionNode : public ExpressionNode {
+      private:
+         PtrT _lhs, _rhs;
+
+      public:
+         inline BinaryExpressionNode(int line, int col, PtrT lhs, PtrT rhs)
+            : ExpressionNode(line, col),
+               _lhs(std::move(lhs)), _rhs(std::move(rhs))
+         { }
+
+         inline Node* lhs() {
+            return _lhs.get();
+         }
+
+         inline Node* rhs() {
+            return _rhs.get();
+         }
+      };
+   }
+}

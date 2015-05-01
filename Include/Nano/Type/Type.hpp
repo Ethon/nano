@@ -1,4 +1,4 @@
-// Copyright (c) <2014-2015> <Florian Erler>
+// Copyright (c) <2015> <Florian Erler>
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from
@@ -20,9 +20,17 @@
 
 #pragma once
 
-// Nano:
-#include <Nano/Ast/Value.hpp>
-#include <Nano/Ast/BinaryArithmetic.hpp>
-#include <Nano/Ast/Call.hpp>
-#include <Nano/Ast/ExpressionList.hpp>
-#include <Nano/Ast/Assignment.hpp>
+// C++ Standard Library:
+#include <string>
+
+namespace nano {
+   namespace type {
+      class Type {
+      public:
+         virtual ~Type() = default;
+         virtual Type* commonType(Type* other) = 0;
+         virtual bool isPrimitive() = 0;
+         virtual std::string typeString() = 0;
+      };
+   }
+}

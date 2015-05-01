@@ -1,4 +1,4 @@
-// Copyright (c) <2014> <Florian Erler>
+// Copyright (c) <2014-2015> <Florian Erler>
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from
@@ -18,77 +18,63 @@
 //
 // 3. This notice may not be removed or altered from any source distribution.
 
-#ifndef HEADER_UUID_782C7C6A7D994BA18F52DA256CC1164D
-#define HEADER_UUID_782C7C6A7D994BA18F52DA256CC1164D
+#pragma once
 
 // Nano:
 #include <Nano/Ast/Node.hpp>
 #include <Nano/Ast/Visitor.hpp>
 
-namespace nano
-{
-    namespace ast
-    {
-        struct BinaryPlusNode : public BinaryExpressionNode
-        {
-            inline BinaryPlusNode(int line, int col, PtrT lhs, PtrT rhs)
-                : BinaryExpressionNode(line, col, std::move(lhs), std::move(rhs))
-            { }
-            
-            inline virtual void visit(Visitor* v) override
-            {
-                v->accept(this);
-            }
-        };
-    
-        struct BinaryMinusNode : public BinaryExpressionNode
-        {
-            inline BinaryMinusNode(int line, int col, PtrT lhs, PtrT rhs)
-                : BinaryExpressionNode(line, col, std::move(lhs), std::move(rhs))
-            { }
-            
-            inline virtual void visit(Visitor* v) override
-            {
-                v->accept(this);
-            }
-        };
-        
-        struct BinaryMultiplyNode : public BinaryExpressionNode
-        {
-            inline BinaryMultiplyNode(int line, int col, PtrT lhs, PtrT rhs)
-                : BinaryExpressionNode(line, col, std::move(lhs), std::move(rhs))
-            { }
-            
-            inline virtual void visit(Visitor* v) override
-            {
-                v->accept(this);
-            }
-        };
-   
-        struct BinaryDivideNode : public BinaryExpressionNode
-        {
-            inline BinaryDivideNode(int line, int col, PtrT lhs, PtrT rhs)
-                : BinaryExpressionNode(line, col, std::move(lhs), std::move(rhs))
-            { }
-            
-            inline virtual void visit(Visitor* v) override
-            {
-                v->accept(this);
-            }
-        };
-        
-        struct BinaryPowerNode : public BinaryExpressionNode
-        {
-            inline BinaryPowerNode(int line, int col, PtrT lhs, PtrT rhs)
-                : BinaryExpressionNode(line, col, std::move(lhs), std::move(rhs))
-            { }
-            
-            inline virtual void visit(Visitor* v) override
-            {
-                v->accept(this);
-            }
-        };
-    }
-}
+namespace nano {
+   namespace ast {
+      struct BinaryPlusNode : public BinaryExpressionNode {
+         inline BinaryPlusNode(int line, int col, PtrT lhs, PtrT rhs)
+            : BinaryExpressionNode(line, col, std::move(lhs), std::move(rhs))
+         { }
 
-#endif // HEADER_UUID_782C7C6A7D994BA18F52DA256CC1164D
+         inline virtual void visit(Visitor* v) override {
+            v->accept(this);
+         }
+      };
+
+      struct BinaryMinusNode : public BinaryExpressionNode {
+         inline BinaryMinusNode(int line, int col, PtrT lhs, PtrT rhs)
+            : BinaryExpressionNode(line, col, std::move(lhs), std::move(rhs))
+         { }
+
+         inline virtual void visit(Visitor* v) override {
+            v->accept(this);
+         }
+      };
+
+      struct BinaryMultiplyNode : public BinaryExpressionNode {
+         inline BinaryMultiplyNode(int line, int col, PtrT lhs, PtrT rhs)
+            : BinaryExpressionNode(line, col, std::move(lhs), std::move(rhs))
+         { }
+
+         inline virtual void visit(Visitor* v) override {
+            v->accept(this);
+         }
+      };
+
+      struct BinaryDivideNode : public BinaryExpressionNode {
+         inline BinaryDivideNode(int line, int col, PtrT lhs, PtrT rhs)
+            : BinaryExpressionNode(line, col, std::move(lhs), std::move(rhs))
+         { }
+
+         inline virtual void visit(Visitor* v) override {
+            v->accept(this);
+         }
+      };
+      
+      struct BinaryPowerNode : public BinaryExpressionNode
+      {
+         inline BinaryPowerNode(int line, int col, PtrT lhs, PtrT rhs)
+            : BinaryExpressionNode(line, col, std::move(lhs), std::move(rhs))
+         { }
+
+         inline virtual void visit(Visitor* v) override {
+            v->accept(this);
+         }
+      };
+   }
+}

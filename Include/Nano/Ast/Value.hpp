@@ -1,4 +1,4 @@
-// Copyright (c) <2014> <Florian Erler>
+// Copyright (c) <2014-2015> <Florian Erler>
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from
@@ -18,8 +18,7 @@
 //
 // 3. This notice may not be removed or altered from any source distribution.
 
-#ifndef HEADER_UUID_43DEB27742CC4EAA9CD5F1ED4B8118C5
-#define HEADER_UUID_43DEB27742CC4EAA9CD5F1ED4B8118C5
+#pragma once
 
 // C++ Standard Library:
 #include <string>
@@ -30,73 +29,63 @@
 #include <Nano/Object/Int.hpp>
 #include <Nano/Object/Float.hpp>
 
-namespace nano
-{
-    namespace ast
-    {
-        class IntNode : public Node
-        {
-        private:
-            object::CppIntType _val;
-            
-        public:
-            inline IntNode(int line, int col, object::CppIntType val)
-                : Node(line, col), _val(std::move(val))
-            { }
-            
-            inline object::CppIntType const& value()
-            {
-                return _val;
-            }
-            
-            inline virtual void visit(Visitor* v) override
-            {
-                v->accept(this);
-            }
-        };
-        
-        class FloatNode : public Node
-        {
-        private:
-            object::CppFloatType _val;
-            
-        public:
-            inline FloatNode(int line, int col, object::CppFloatType val)
-                : Node(line, col), _val(std::move(val))
-            { }
-            
-            inline object::CppFloatType const& value()
-            {
-                return _val;
-            }
-            
-            inline virtual void visit(Visitor* v) override
-            {
-                v->accept(this);
-            }
-        };
-        
-        class VarNode : public Node
-        {
-        private:
-            std::string _name;
-            
-        public:
-            inline VarNode(int line, int col, std::string name)
-                : Node(line, col), _name(name)
-            { }
-            
-            inline std::string const& value()
-            {
-                return _name;
-            }
-            
-            inline virtual void visit(Visitor* v) override
-            {
-                v->accept(this);
-            }
-        };
-    }
-}
+namespace nano {
+   namespace ast {
+      class IntNode : public ExpressionNode
+      {
+      private:
+         object::CppIntType _val;
 
-#endif // HEADER_UUID_43DEB27742CC4EAA9CD5F1ED4B8118C5
+      public:
+         inline IntNode(int line, int col, object::CppIntType val)
+            : ExpressionNode(line, col), _val(std::move(val))
+         { }
+
+         inline object::CppIntType const& value() {
+            return _val;
+         }
+
+         inline virtual void visit(Visitor* v) override {
+            v->accept(this);
+         }
+      };
+
+      class FloatNode : public ExpressionNode
+      {
+      private:
+         object::CppFloatType _val;
+
+      public:
+         inline FloatNode(int line, int col, object::CppFloatType val)
+            : ExpressionNode(line, col), _val(std::move(val))
+         { }
+
+         inline object::CppFloatType const& value() {
+            return _val;
+         }
+
+         inline virtual void visit(Visitor* v) override {
+            v->accept(this);
+         }
+      };
+
+      class VarNode : public ExpressionNode
+      {
+      private:
+         std::string _name;
+
+      public:
+         inline VarNode(int line, int col, std::string name)
+            : ExpressionNode(line, col), _name(name)
+         { }
+
+         inline std::string const& value() {
+            return _name;
+         }
+
+         inline virtual void visit(Visitor* v) override {
+            v->accept(this);
+         }
+      };
+   }
+}

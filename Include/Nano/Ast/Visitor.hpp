@@ -1,4 +1,4 @@
-// Copyright (c) <2014> <Florian Erler>
+// Copyright (c) <2014-2015> <Florian Erler>
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from
@@ -18,58 +18,52 @@
 //
 // 3. This notice may not be removed or altered from any source distribution.
 
-#ifndef HEADER_UUID_C309FCA11F2F459CAFC383DF3A4251D3
-#define HEADER_UUID_C309FCA11F2F459CAFC383DF3A4251D3
+#pragma once
 
-namespace nano
-{
-    namespace ast
-    {
-        // Value AST:
-        class IntNode;
-        class FloatNode;
-        class VarNode;
-        
-        // Binary Arithmetic AST:
-        class BinaryPlusNode;
-        class BinaryMinusNode;
-        class BinaryMultiplyNode;
-        class BinaryDivideNode;
-        class BinaryPowerNode;
-        
-        // Assignment AST:
-        class AssignmentNode;
-        
-        // Other Expression AST:
-        class CallNode;
-        
-        // Other:
-        class ExpressionListNode;
-        
-        struct Visitor
-        {
-            // Value AST:
-            virtual void accept(IntNode*) = 0;
-            virtual void accept(FloatNode*) = 0;
-            virtual void accept(VarNode*) = 0;
-            
-            // Binary Arithmetic AST:
-            virtual void accept(BinaryPlusNode*) = 0;
-            virtual void accept(BinaryMinusNode*) = 0;
-            virtual void accept(BinaryMultiplyNode*) = 0;
-            virtual void accept(BinaryDivideNode*) = 0;
-            virtual void accept(BinaryPowerNode*) = 0;
-            
-            // Assignment AST:
-            virtual void accept(AssignmentNode*) = 0;
-            
-            // Other Expression AST:
-            virtual void accept(CallNode*) = 0;
-            
-            // Other:
-            virtual void accept(ExpressionListNode*) = 0;
-        };
-    }
+namespace nano {
+   namespace ast {
+      // Value AST:
+      class IntNode;
+      class FloatNode;
+      class VarNode;
+
+      // Binary Arithmetic AST:
+      class BinaryPlusNode;
+      class BinaryMinusNode;
+      class BinaryMultiplyNode;
+      class BinaryDivideNode;
+      class BinaryPowerNode;
+
+      // Assignment AST:
+      class AssignmentNode;
+
+      // Other Expression AST:
+      class CallNode;
+
+      // Other:
+      class ExpressionListNode;
+
+      struct Visitor {
+         // Value AST:
+         virtual void accept(IntNode*) = 0;
+         virtual void accept(FloatNode*) = 0;
+         virtual void accept(VarNode*) = 0;
+
+         // Binary Arithmetic AST:
+         virtual void accept(BinaryPlusNode*) = 0;
+         virtual void accept(BinaryMinusNode*) = 0;
+         virtual void accept(BinaryMultiplyNode*) = 0;
+         virtual void accept(BinaryDivideNode*) = 0;
+         virtual void accept(BinaryPowerNode*) = 0;
+
+         // Assignment AST:
+         virtual void accept(AssignmentNode*) = 0;
+
+         // Other Expression AST:
+         virtual void accept(CallNode*) = 0;
+
+         // Other:
+         virtual void accept(ExpressionListNode*) = 0;
+      };
+   }
 }
-
-#endif // HEADER_UUID_C309FCA11F2F459CAFC383DF3A4251D3

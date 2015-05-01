@@ -1,4 +1,4 @@
-// Copyright (c) <2014> <Florian Erler>
+// Copyright (c) <2014-2015> <Florian Erler>
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from
@@ -18,8 +18,7 @@
 //
 // 3. This notice may not be removed or altered from any source distribution.
 
-#ifndef HEADER_UUID_7ECDF98398484EEEB540BF5595AA227E
-#define HEADER_UUID_7ECDF98398484EEEB540BF5595AA227E
+#pragma once
 
 // C++ Standard Library:
 #include <vector>
@@ -28,31 +27,26 @@
 #include <Nano/Ast/Node.hpp>
 #include <Nano/Ast/Visitor.hpp>
 
-namespace nano
-{
-    namespace ast
-    {
-        class ExpressionListNode : public Node
-        {
-        private:
-            std::vector<PtrT> _list;
-            
-        public:
-            inline ExpressionListNode(int line, int col)
-                : Node(line, col)
-            { }
-            
-            inline std::vector<PtrT>& list()
-            {
-                return _list;
-            }
-            
-            inline virtual void visit(Visitor* v) override
-            {
-                v->accept(this);
-            }
-        };
-    }
-}
+namespace nano {
+   namespace ast
+   {
+      class ExpressionListNode : public Node
+      {
+      private:
+         std::vector<PtrT> _list;
 
-#endif // HEADER_UUID_7ECDF98398484EEEB540BF5595AA227E
+      public:
+         inline ExpressionListNode(int line, int col)
+            : Node(line, col)
+         { }
+
+         inline std::vector<PtrT>& list() {
+               return _list;
+         }
+
+         inline virtual void visit(Visitor* v) override {
+               v->accept(this);
+         }
+      };
+   }
+}

@@ -1,4 +1,4 @@
-// Copyright (c) <2014> <Florian Erler>
+// Copyright (c) <2014-2015> <Florian Erler>
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from
@@ -18,8 +18,7 @@
 //
 // 3. This notice may not be removed or altered from any source distribution.
 
-#ifndef HEADER_UUID_35DFDC58D5EF4E299A4CBF8E04E011B7
-#define HEADER_UUID_35DFDC58D5EF4E299A4CBF8E04E011B7
+#pragma once
 
 // Nano:
 #include <Nano/Ast/Node.hpp>
@@ -27,35 +26,31 @@
 
 namespace nano
 {
-    namespace ast
-    {
-        class AssignmentNode : public Node
-        {
-        private:
-            PtrT _lhs;
-            PtrT _rhs;
-            
-        public:
-            inline AssignmentNode(int line, int col, PtrT lhs, PtrT rhs)
-                : Node(line, col), _lhs(std::move(lhs)), _rhs(std::move(rhs))
-            { }
-            
-            inline Node* lhs()
-            {
-                return _lhs.get();
-            }
-            
-            inline Node* rhs()
-            {
-                return _rhs.get();
-            }
-            
-            inline virtual void visit(Visitor* v) override
-            {
-                v->accept(this);
-            }
-        };
-    }
-}
+   namespace ast
+   {
+      class AssignmentNode : public ExpressionNode
+      {
+      private:
+         PtrT _lhs;
+         PtrT _rhs;
 
-#endif // HEADER_UUID_35DFDC58D5EF4E299A4CBF8E04E011B7
+      public:
+         inline AssignmentNode(int line, int col, PtrT lhs, PtrT rhs)
+            : ExpressionNode(line, col),
+               _lhs(std::move(lhs)), _rhs(std::move(rhs))
+         { }
+
+         inline Node* lhs() {
+            return _lhs.get();
+         }
+
+         inline Node* rhs() {
+            return _rhs.get();
+         }
+
+         inline virtual void visit(Visitor* v) override {
+            v->accept(this);
+         }
+      };
+   }
+}

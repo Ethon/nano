@@ -1,4 +1,4 @@
-// Copyright (c) <2014> <Florian Erler>
+// Copyright (c) <2014-2015> <Florian Erler>
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from
@@ -18,8 +18,7 @@
 //
 // 3. This notice may not be removed or altered from any source distribution.
 
-#ifndef HEADER_UUID_31E8230C92B04A05A4C0419C4C1D899B
-#define HEADER_UUID_31E8230C92B04A05A4C0419C4C1D899B
+#pragma once
 
 // Nano:
 #include <Nano/Ast/Node.hpp>
@@ -27,35 +26,31 @@
 
 namespace nano
 {
-    namespace ast
-    {
-        class CallNode : public Node
-        {
-        private:
-            PtrT _target;
-            PtrT _args;
-            
-        public:
-            inline CallNode(int line, int col, PtrT target, PtrT args)
-                : Node(line, col), _target(std::move(target)), _args(std::move(args))
-            { }
-            
-            inline Node* target()
-            {
-                return _target.get();
-            }
-            
-            inline Node* args()
-            {
-                return _args.get();
-            }
-            
-            inline virtual void visit(Visitor* v) override
-            {
-                v->accept(this);
-            }
-        };
-    }
-}
+   namespace ast
+   {
+      class CallNode : public ExpressionNode
+      {
+      private:
+         PtrT _target;
+         PtrT _args;
 
-#endif // HEADER_UUID_31E8230C92B04A05A4C0419C4C1D899B
+      public:
+         inline CallNode(int line, int col, PtrT target, PtrT args)
+            : ExpressionNode(line, col),
+               _target(std::move(target)), _args(std::move(args))
+         { }
+
+         inline Node* target() {
+            return _target.get();
+         }
+
+         inline Node* args() {
+            return _args.get();
+         }
+
+         inline virtual void visit(Visitor* v) override {
+            v->accept(this);
+         }
+      };
+   }
+}
