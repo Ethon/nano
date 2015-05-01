@@ -1,4 +1,4 @@
-# Copyright (c) <2014> <Florian Erler>
+# Copyright (c) <2014-2015> <Florian Erler>
 #
 # This software is provided 'as-is', without any express or implied warranty.
 # In no event will the authors be held liable for any damages arising from
@@ -67,19 +67,28 @@ add_library(nano STATIC
     ${BisonOutput}
     ${FlexOutput}
     Src/Detail/ParseContext.cpp
-    
+
     Src/Util/RawAllocator.cpp
-    
+
     Src/Object/Object.cpp
     Src/Object/Int.cpp
     Src/Object/Float.cpp
-    
+
     Src/Gen/XmlGen.cpp
-    
+
+    Src/VM/VirtualMachine.cpp
+
     Src/ObjectTable.cpp
     Src/GlobalContext.cpp
     Src/Interpreter.cpp
 )
+
+# Compile tests.
+option (COMPILE_TESTS
+   "COMPILE_TESTS" ON)
+if(COMPILE_TESTS)
+   add_subdirectory(Test)
+endif()
 
 # Compile NanoCalc
 add_executable(nanocalc
