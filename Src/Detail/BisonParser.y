@@ -15,7 +15,7 @@ void yyerror(YYLTYPE* loc, void* ctx, char const* s);
 
 %pure-parser
 %locations
-%lex-param {void* lexer}
+%lex-param {YYLEX_PARAM}
 %parse-param {nano::detail::ParseContext* context}
 
 %union
