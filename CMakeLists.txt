@@ -81,6 +81,7 @@ add_library(nano STATIC
 
     Src/VM/VirtualMachine.cpp
 
+    Src/MessageListener.cpp
     Src/ObjectTable.cpp
     Src/GlobalContext.cpp
     Src/Interpreter.cpp
