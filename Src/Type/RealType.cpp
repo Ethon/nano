@@ -52,6 +52,30 @@ Type::PtrT RealType::resultTypeOfAddition(const Type::PtrT& rhs) {
    return Type::PtrT();
 }
 
+Type::PtrT RealType::resultTypeOfSubtraction(PtrT const& rhs) {
+   if(rhs->typeId() == TYPEID_INT || rhs->typeId() == TYPEID_REAL) {
+      return instance;
+   }
+   return Type::PtrT();
+}
 
+Type::PtrT RealType::resultTypeOfMultiplication(PtrT const& rhs) {
+   if(rhs->typeId() == TYPEID_INT || rhs->typeId() == TYPEID_REAL) {
+      return instance;
+   }
+   return Type::PtrT();
+}
 
+Type::PtrT RealType::resultTypeOfDivision(PtrT const& rhs) {
+   if(rhs->typeId() == TYPEID_INT || rhs->typeId() == TYPEID_REAL) {
+      return instance;
+   }
+   return Type::PtrT();
+}
 
+Type::PtrT RealType::resultTypeOfPotentiation(PtrT const& rhs) {
+   if(rhs->typeId() == TYPEID_INT || rhs->typeId() == TYPEID_REAL) {
+      return instance;
+   }
+   return Type::PtrT();
+}

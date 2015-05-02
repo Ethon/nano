@@ -48,6 +48,10 @@ namespace nano {
          virtual std::string const& typeString() = 0;
 
          virtual PtrT resultTypeOfAddition(PtrT const& rhs) = 0;
+         virtual PtrT resultTypeOfSubtraction(PtrT const& rhs) = 0;
+         virtual PtrT resultTypeOfMultiplication(PtrT const& rhs) = 0;
+         virtual PtrT resultTypeOfDivision(PtrT const& rhs) = 0;
+         virtual PtrT resultTypeOfPotentiation(PtrT const& rhs) = 0;
       };
    }
 }

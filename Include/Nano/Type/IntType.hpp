@@ -38,6 +38,10 @@ namespace nano {
          virtual std::string const& typeString() override;
 
          virtual PtrT resultTypeOfAddition(PtrT const& rhs) override;
+         virtual PtrT resultTypeOfSubtraction(PtrT const& rhs) override;
+         virtual PtrT resultTypeOfMultiplication(PtrT const& rhs) override;
+         virtual PtrT resultTypeOfDivision(PtrT const& rhs) override;
+         virtual PtrT resultTypeOfPotentiation(PtrT const& rhs) override;
       };
    }
 }

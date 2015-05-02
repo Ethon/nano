@@ -57,6 +57,43 @@ Type::PtrT IntType::resultTypeOfAddition(const Type::PtrT& rhs) {
    return Type::PtrT();
 }
 
+Type::PtrT IntType::resultTypeOfSubtraction(PtrT const& rhs) {
+   if(rhs->typeId() == TYPEID_INT) {
+      return instance;
+   } else if(rhs->typeId() == TYPEID_REAL) {
+      return RealType::instance;
+   }
+   return Type::PtrT();
+}
+
+Type::PtrT IntType::resultTypeOfMultiplication(PtrT const& rhs) {
+   if(rhs->typeId() == TYPEID_INT) {
+      return instance;
+   } else if(rhs->typeId() == TYPEID_REAL) {
+      return RealType::instance;
+   }
+   return Type::PtrT();
+}
+
+Type::PtrT IntType::resultTypeOfDivision(PtrT const& rhs) {
+   if(rhs->typeId() == TYPEID_INT) {
+      return instance;
+   } else if(rhs->typeId() == TYPEID_REAL) {
+      return RealType::instance;
+   }
+   return Type::PtrT();
+}
+
+Type::PtrT IntType::resultTypeOfPotentiation(PtrT const& rhs) {
+   if(rhs->typeId() == TYPEID_INT) {
+      return instance;
+   } else if(rhs->typeId() == TYPEID_REAL) {
+      return RealType::instance;
+   }
+   return Type::PtrT();
+}
+
+
 
 
 

@@ -21,27 +21,11 @@
 #pragma once
 
 // Nano:
-#include <Nano/Type/Type.hpp>
+#include <Nano/Ast/Node.hpp>
+#include <Nano/MessageListener.hpp>
 
 namespace nano {
    namespace type {
-      class RealType : public Type {
-      public:
-         static PtrT instance;
-
-         RealType() = default;
-         
-      public:
-         virtual TypeId typeId() override;
-         virtual PtrT commonType(PtrT const& other) override;
-         virtual bool isPrimitive() override;
-         virtual std::string const& typeString() override;
-
-         virtual PtrT resultTypeOfAddition(PtrT const& rhs) override;
-         virtual PtrT resultTypeOfSubtraction(PtrT const& rhs) override;
-         virtual PtrT resultTypeOfMultiplication(PtrT const& rhs) override;
-         virtual PtrT resultTypeOfDivision(PtrT const& rhs) override;
-         virtual PtrT resultTypeOfPotentiation(PtrT const& rhs) override;
-      };
+      void populateTypes(ast::Node* ast, MessageListener& listener);
    }
 }

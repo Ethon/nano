@@ -61,12 +61,20 @@ namespace nano {
 
       class ExpressionNode : public Node {
       private:
-         type::Type* type;
+         type::Type::PtrT type_;
 
       public:
          inline ExpressionNode(int line, int col)
             : Node(line, col)
          { }
+
+         inline type::Type::PtrT const& type() const {
+            return type_;
+         }
+
+         inline void type(type::Type::PtrT t) {
+            type_ = std::move(t);
+         }
       };
 
       class BinaryExpressionNode : public ExpressionNode {
@@ -79,12 +87,12 @@ namespace nano {
                _lhs(std::move(lhs)), _rhs(std::move(rhs))
          { }
 
-         inline Node* lhs() {
-            return _lhs.get();
+         inline ExpressionNode* lhs() {
+            return static_cast<ExpressionNode*>(_lhs.get());
          }
 
-         inline Node* rhs() {
-            return _rhs.get();
+         inline ExpressionNode* rhs() {
+            return static_cast<ExpressionNode*>(_rhs.get());
          }
       };
    }
