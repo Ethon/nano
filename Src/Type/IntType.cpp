@@ -18,36 +18,45 @@
 //
 // 3. This notice may not be removed or altered from any source distribution.
 
-#pragma once
+// Nano:
+#include <Nano/Type/IntType.hpp>
+#include <Nano/Type/RealType.hpp>
 
-// C++ Standard Library:
-#include <string>
-#include <memory>
+using namespace nano::type;
 
-namespace nano {
-   namespace type {
-      typedef unsigned TypeId;
+Type::PtrT IntType::instance = Type::make<IntType>();
 
-      TypeId const TYPEID_INT = 1;
-      TypeId const TYPEID_REAL = 2;
-
-      class Type {
-      public:
-         typedef std::shared_ptr<Type> PtrT;
-
-         template<typename T, typename... Args>
-         static PtrT make(Args&&... args) {
-            return std::make_shared<T>(std::forward<Args>(args)...);
-         }
-
-      public:
-         virtual ~Type() = default;
-         virtual TypeId typeId() = 0;
-         virtual PtrT commonType(PtrT const& other) = 0;
-         virtual bool isPrimitive() = 0;
-         virtual std::string const& typeString() = 0;
-
-         virtual PtrT resultTypeOfAddition(PtrT const& rhs) = 0;
-      };
-   }
+TypeId IntType::typeId() {
+   return TYPEID_INT;
 }
+
+Type::PtrT IntType::commonType(PtrT const& other) {
+   if(other->typeId() == TYPEID_INT) {
+      return instance;
+   } else if(other->typeId() == TYPEID_REAL) {
+      return RealType::instance;
+   }
+   return Type::PtrT();
+}
+
+bool IntType::isPrimitive() {
+   return true;
+}
+
+std::string const& IntType::typeString() {
+   static std::string result = "int";
+   return result;
+}
+
+Type::PtrT IntType::resultTypeOfAddition(const Type::PtrT& rhs) {
+   if(rhs->typeId() == TYPEID_INT) {
+      return instance;
+   } else if(rhs->typeId() == TYPEID_REAL) {
+      return RealType::instance;
+   }
+   return Type::PtrT();
+}
+
+
+
+

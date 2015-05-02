@@ -70,6 +70,9 @@ add_library(nano STATIC
 
     Src/Util/RawAllocator.cpp
 
+    Src/Type/IntType.cpp
+    Src/Type/RealType.cpp
+
     Src/Object/Object.cpp
     Src/Object/Int.cpp
     Src/Object/Float.cpp

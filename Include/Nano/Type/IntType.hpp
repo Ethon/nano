@@ -20,34 +20,24 @@
 
 #pragma once
 
-// C++ Standard Library:
-#include <string>
-#include <memory>
+// Nano:
+#include <Nano/Type/Type.hpp>
 
 namespace nano {
    namespace type {
-      typedef unsigned TypeId;
-
-      TypeId const TYPEID_INT = 1;
-      TypeId const TYPEID_REAL = 2;
-
-      class Type {
+      class IntType : public Type {
       public:
-         typedef std::shared_ptr<Type> PtrT;
+         static PtrT instance;
 
-         template<typename T, typename... Args>
-         static PtrT make(Args&&... args) {
-            return std::make_shared<T>(std::forward<Args>(args)...);
-         }
+         IntType() = default;
 
       public:
-         virtual ~Type() = default;
-         virtual TypeId typeId() = 0;
-         virtual PtrT commonType(PtrT const& other) = 0;
-         virtual bool isPrimitive() = 0;
-         virtual std::string const& typeString() = 0;
+         virtual TypeId typeId() override;
+         virtual PtrT commonType(PtrT const& other) override;
+         virtual bool isPrimitive() override;
+         virtual std::string const& typeString() override;
 
-         virtual PtrT resultTypeOfAddition(PtrT const& rhs) = 0;
+         virtual PtrT resultTypeOfAddition(PtrT const& rhs) override;
       };
    }
 }

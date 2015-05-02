@@ -37,7 +37,7 @@ namespace nano {
          typedef std::shared_ptr<Node> PtrT;
 
          template<typename T, typename... Args>
-         inline static PtrT make(Args&&... args) {
+         static PtrT make(Args&&... args) {
             return std::make_shared<T>(std::forward<Args>(args)...);
          }
 
