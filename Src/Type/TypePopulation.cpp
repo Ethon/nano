@@ -54,7 +54,7 @@ private:
          n->rhs()->visit(this);
       }
    }
-   
+
    template<typename IterT>
    void visitList(IterT begin, IterT end) {
       for(; begin != end; ++begin) {

@@ -76,10 +76,13 @@ add_library(nano STATIC
    Src/Type/IntType.cpp
    Src/Type/RealType.cpp
 
-   #Src/Gen/XmlGen.cpp
+   Src/Gen/XmlGen.cpp
 
    Src/VM/VirtualMachine.cpp
 )
+
+# Compile tools.
+add_subdirectory(Tools)
 
 # Compile tests.
 option (COMPILE_TESTS
@@ -96,3 +99,4 @@ endif()
 #    nano
 #    readline
 #)
+
