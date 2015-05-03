@@ -13,6 +13,12 @@
 
 #define YY_EXTRA_TYPE nano::detail::ParseContext*
 
+//static int column = 1;
+
+#define YY_USER_ACTION yylloc->first_line = yylloc->last_line = yylineno; \
+    yylloc->first_column = yycolumn; yylloc->last_column = yycolumn+yyleng-1; \
+    yycolumn += yyleng;
+
 // Disable warnings created by gcc for Flex code.
 #ifdef __GNUC__
 #   pragma GCC diagnostic push
