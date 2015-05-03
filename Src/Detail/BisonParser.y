@@ -110,7 +110,7 @@ ArgumentDeclerationList
       {
          context->push<nano::ast::VariableDeclerationListNode>(@$.first_line, @$.first_column);
       }
-   | ArgumentExpressionList COMMA VariableDecleration
+   | ArgumentDeclerationList COMMA VariableDecleration
       {
          auto decl = context->pop();
          auto vdln = dynamic_cast<nano::ast::VariableDeclerationListNode*>(context->top());
