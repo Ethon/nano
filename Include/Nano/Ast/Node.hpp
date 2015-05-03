@@ -25,7 +25,6 @@
 
 // Nano:
 #include <Nano/Common/SourcePos.hpp>
-#include <Nano/Object/Object.hpp>
 #include <Nano/Type/Type.hpp>
 
 namespace nano {

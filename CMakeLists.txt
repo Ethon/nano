@@ -64,28 +64,21 @@ include_directories(
 
 # Compile LibNano.
 add_library(nano STATIC
-    ${BisonOutput}
-    ${FlexOutput}
-    Src/Detail/ParseContext.cpp
+   Src/MessageListener.cpp
 
-    Src/Util/RawAllocator.cpp
+   ${BisonOutput}
+   ${FlexOutput}
+   Src/Detail/ParseContext.cpp
 
-    Src/Type/TypePopulation.cpp
-    Src/Type/IntType.cpp
-    Src/Type/RealType.cpp
+   Src/Util/RawAllocator.cpp
 
-    Src/Object/Object.cpp
-    Src/Object/Int.cpp
-    Src/Object/Float.cpp
+   Src/Type/TypePopulation.cpp
+   Src/Type/IntType.cpp
+   Src/Type/RealType.cpp
 
-    Src/Gen/XmlGen.cpp
+   #Src/Gen/XmlGen.cpp
 
-    Src/VM/VirtualMachine.cpp
-
-    Src/MessageListener.cpp
-    Src/ObjectTable.cpp
-    Src/GlobalContext.cpp
-    Src/Interpreter.cpp
+   Src/VM/VirtualMachine.cpp
 )
 
 # Compile tests.
@@ -96,10 +89,10 @@ if(COMPILE_TESTS)
 endif()
 
 # Compile NanoCalc
-add_executable(nanocalc
-    Src/NanoCalc.cpp
-)
-target_link_libraries(nanocalc
-    nano
-    readline
-)
+#add_executable(nanocalc
+#    Src/NanoCalc.cpp
+#)
+#target_link_libraries(nanocalc
+#    nano
+#    readline
+#)

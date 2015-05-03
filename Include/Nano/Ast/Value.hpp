@@ -23,25 +23,27 @@
 // C++ Standard Library:
 #include <string>
 
+// Boost:
+#include <boost/multiprecision/cpp_int.hpp> 
+#include <boost/multiprecision/cpp_dec_float.hpp> 
+
 // Nano:
 #include <Nano/Ast/Node.hpp>
 #include <Nano/Ast/Visitor.hpp>
-#include <Nano/Object/Int.hpp>
-#include <Nano/Object/Float.hpp>
 
 namespace nano {
    namespace ast {
       class IntNode : public ExpressionNode
       {
       private:
-         object::CppIntType _val;
+         boost::multiprecision::cpp_int _val;
 
       public:
-         inline IntNode(int line, int col, object::CppIntType val)
+         inline IntNode(int line, int col, boost::multiprecision::cpp_int val)
             : ExpressionNode(line, col), _val(std::move(val))
          { }
 
-         inline object::CppIntType const& value() {
+         inline boost::multiprecision::cpp_int const& value() {
             return _val;
          }
 
@@ -53,14 +55,15 @@ namespace nano {
       class FloatNode : public ExpressionNode
       {
       private:
-         object::CppFloatType _val;
+         boost::multiprecision::cpp_dec_float_50 _val;
 
       public:
-         inline FloatNode(int line, int col, object::CppFloatType val)
+         inline FloatNode(int line, int col,
+                          boost::multiprecision::cpp_dec_float_50 val)
             : ExpressionNode(line, col), _val(std::move(val))
          { }
 
-         inline object::CppFloatType const& value() {
+         inline boost::multiprecision::cpp_dec_float_50 const& value() {
             return _val;
          }
 

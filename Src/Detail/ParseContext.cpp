@@ -30,58 +30,52 @@ using namespace nano;
 using namespace nano::ast;
 using namespace nano::detail;
 
-namespace
-{
-    void onLexerErrorDefault(SourcePos const& pos, char const* s)
-    {
-        std::cerr << "[Lexer error] (" << pos.line << ',' << pos.col <<
-            ") Unrecognized character: " << s << '\n';
-    }
-    
-    void onParserErrorDefault(SourcePos const& pos, char const* s)
-    {
-        std::cerr << "[Parser error] (" << pos.line << ',' << pos.col <<
-            ") Bison error: " << s << '\n';
-    }
+namespace {
+   void onLexerErrorDefault(SourcePos const& pos, char const* s) {
+      std::cerr << "[Lexer error] (" << pos.line << ',' << pos.col <<
+         ") Unrecognized character: " << s << '\n';
+   }
+
+   void onParserErrorDefault(SourcePos const& pos, char const* s) {
+      std::cerr << "[Parser error] (" << pos.line << ',' << pos.col <<
+         ") Bison error: " << s << '\n';
+   }
 }
 
 ////
 // LexerStorage implementation
 ////
 
-std::string const* LexerStorage::storeIdentifier(std::string identifier)
-{
-    auto iter = _identifiers.emplace(std::move(identifier)).first;
-    return &(*iter);
+std::string const* LexerStorage::storeIdentifier(std::string identifier) {
+   auto iter = _identifiers.emplace(std::move(identifier)).first;
+   return &(*iter);
 }
 
-object::CppIntType const* LexerStorage::storeIntLit(char const* str, unsigned base)
-{
-    if(base == 8 || base == 10 || base == 16)
-    {
-        auto iter = _intLits.emplace(object::CppIntType(str)).first;
-        return &(*iter);
-    }
-    else if(base == 2)
-    {
-        object::CppIntType result;
-        str += 2; // Skip 0b
-        for(; *str; ++str)
-        {
-            result *= 2;
-            result += (*str == '1');
-        }
-        auto iter = _intLits.emplace(std::move(result)).first;
-        return &(*iter);
-    }
-    else
-        assert(false);
+boost::multiprecision::cpp_int const* LexerStorage::storeIntLit(char const* str,
+                                                               unsigned base) {
+   if(base == 8 || base == 10 || base == 16) {
+      auto iter = _intLits.emplace(boost::multiprecision::cpp_int(str)).first;
+      return &(*iter);
+   }
+   else if(base == 2) {
+      boost::multiprecision::cpp_int result;
+      str += 2; // Skip 0b
+      for(; *str; ++str) {
+         result *= 2;
+         result += (*str == '1');
+      }
+      auto iter = _intLits.emplace(std::move(result)).first;
+      return &(*iter);
+   }
+   else {
+      assert(false);
+   }
 }
 
-object::CppFloatType const* LexerStorage::storeFloatLit(char const* str)
-{
-    auto iter = _floatLits.emplace(str).first;
-    return &(*iter);
+boost::multiprecision::cpp_dec_float_50 const*
+   LexerStorage::storeFloatLit(char const* str) {
+   auto iter = _floatLits.emplace(str).first;
+   return &(*iter);
 }
 
 ////
@@ -89,81 +83,76 @@ object::CppFloatType const* LexerStorage::storeFloatLit(char const* str)
 ////
 
 ParseContext::ParseContext(char const* string, StringInput)
-    :   _inputFile(nullptr, [](std::FILE*){ }),
-        _lexer(createStringLexer(string, this), &destroyLexer),
-        _onLexerError(&::onLexerErrorDefault),
-        _onParserError(&::onParserErrorDefault),
-        _storage(),
-        _stack()
+   :  _inputFile(nullptr, [](std::FILE*){ }),
+      _lexer(createStringLexer(string, this), &destroyLexer),
+      _onLexerError(&::onLexerErrorDefault),
+      _onParserError(&::onParserErrorDefault),
+      _storage(),
+      _stack()
 { }
 
 ParseContext::ParseContext(char const* fileName, FileInput)
-    :   _inputFile(std::fopen(fileName, "r"), [](std::FILE* f) { std::fclose(f); }),
-        _lexer(createFileLexer(_inputFile.get(), this), &destroyLexer),
-        _onLexerError(&::onLexerErrorDefault),
-        _onParserError(&::onParserErrorDefault),
-        _storage(),
-        _stack()
-{
-    if(!_inputFile)
-        throw std::runtime_error("input file is null");
+   :  _inputFile(std::fopen(fileName, "r"),
+                 [](std::FILE* f) { std::fclose(f); }),
+      _lexer(createFileLexer(_inputFile.get(), this), &destroyLexer),
+      _onLexerError(&::onLexerErrorDefault),
+      _onParserError(&::onParserErrorDefault),
+      _storage(),
+      _stack() {
+   if(!_inputFile) {
+      throw std::runtime_error("input file is null");
+   }
 }
 
 ParseContext::ParseContext(std::FILE* file, bool close)
-    :   _inputFile(file, close ? [](std::FILE* f){ std::fclose(f); } : [](std::FILE*){ }),
-        _lexer(createFileLexer(_inputFile.get(), this), &destroyLexer),
-        _onLexerError(&::onLexerErrorDefault),
-        _onParserError(&::onParserErrorDefault),
-        _storage(),
-        _stack()
-{
-    if(!_inputFile)
-        throw std::runtime_error("input file is null");
+   :  _inputFile(file, close ? [](std::FILE* f){ std::fclose(f); } :
+                               [](std::FILE*){ }),
+      _lexer(createFileLexer(_inputFile.get(), this), &destroyLexer),
+      _onLexerError(&::onLexerErrorDefault),
+      _onParserError(&::onParserErrorDefault),
+      _storage(),
+      _stack() {
+   if(!_inputFile) {
+      throw std::runtime_error("input file is null");
+   }
 }
 
-Node::PtrT ParseContext::parseOne()
-{
-    assert(_stack.empty());
-    parseImpl(this);
-    if(_stack.empty())
-        return Node::PtrT();
-    assert(_stack.size() == 1);
-    return pop();
+Node::PtrT ParseContext::parseOne() {
+   assert(_stack.empty());
+   parseImpl(this);
+   if(_stack.empty()) {
+      return Node::PtrT();
+   }
+   assert(_stack.size() == 1);
+   return pop();
 }
 
-void* ParseContext::lexer()
-{
-    return _lexer.get();
-}
-            
-LexerStorage& ParseContext::storage()
-{
-    return _storage;
+void* ParseContext::lexer() {
+   return _lexer.get();
 }
 
-void ParseContext::triggerLexerError(SourcePos const& pos, char const* s)
-{
-    _onLexerError(pos, s);
+LexerStorage& ParseContext::storage() {
+   return _storage;
 }
 
-void ParseContext::push(Node::PtrT node)
-{
-    _stack.emplace(std::move(node));
+void ParseContext::triggerLexerError(SourcePos const& pos, char const* s) {
+   _onLexerError(pos, s);
 }
 
-Node::PtrT ParseContext::pop()
-{
-    Node::PtrT top = std::move(_stack.top());
-    _stack.pop();
-    return top;
+void ParseContext::push(Node::PtrT node) {
+   _stack.emplace(std::move(node));
 }
 
-Node* ParseContext::top()
-{
-    return _stack.top().get();
+Node::PtrT ParseContext::pop() {
+   Node::PtrT top = std::move(_stack.top());
+   _stack.pop();
+   return top;
 }
 
-void ParseContext::triggerParserError(SourcePos const& pos, char const* s)
-{
-    _onParserError(pos, s);
+Node* ParseContext::top() {
+   return _stack.top().get();
+}
+
+void ParseContext::triggerParserError(SourcePos const& pos, char const* s) {
+   _onParserError(pos, s);
 }

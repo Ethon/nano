@@ -2,6 +2,10 @@
 // C++ Standard Library:
 #include <cassert>
 
+// Boost:
+#include <boost/multiprecision/cpp_int.hpp> 
+#include <boost/multiprecision/cpp_dec_float.hpp> 
+
 // Nano:
 #include <Nano/Detail/ParseContext.hpp>
 #include <Nano/Detail/Token.h>
@@ -20,8 +24,8 @@ void yyerror(YYLTYPE* loc, void* ctx, char const* s);
 
 %union
 {
-    nano::object::CppIntType const* ival;
-    nano::object::CppFloatType const* fval;
+    boost::multiprecision::cpp_int const* ival;
+    boost::multiprecision::cpp_dec_float_50 const* fval;
     std::string const* sval;
 }
 
