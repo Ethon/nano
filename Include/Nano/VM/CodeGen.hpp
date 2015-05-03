@@ -1,4 +1,4 @@
-// Copyright (c) <2014-2015> <Florian Erler>
+// Copyright (c) <2015> <Florian Erler>
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from
@@ -21,11 +21,11 @@
 #pragma once
 
 // Nano:
-#include <Nano/Ast/Value.hpp>
-#include <Nano/Ast/BinaryArithmetic.hpp>
-#include <Nano/Ast/Call.hpp>
-#include <Nano/Ast/ExpressionList.hpp>
-#include <Nano/Ast/Assignment.hpp>
-#include <Nano/Ast/VariableDecleration.hpp>
-#include <Nano/Ast/CodeBlock.hpp>
-#include <Nano/Ast/Function.hpp>
+#include <Nano/Ast/Node.hpp>
+#include <Nano/MessageListener.hpp>
+
+namespace nano {
+   namespace type {
+      void populateTypes(ast::Node* ast, MessageListener& listener);
+   }
+}

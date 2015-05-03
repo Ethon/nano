@@ -1,4 +1,4 @@
-// Copyright (c) <2014-2015> <Florian Erler>
+// Copyright (c) <2015> <Florian Erler>
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from
@@ -20,12 +20,31 @@
 
 #pragma once
 
+// C++ Standard Library:
+#include <vector>
+
 // Nano:
-#include <Nano/Ast/Value.hpp>
-#include <Nano/Ast/BinaryArithmetic.hpp>
-#include <Nano/Ast/Call.hpp>
-#include <Nano/Ast/ExpressionList.hpp>
-#include <Nano/Ast/Assignment.hpp>
-#include <Nano/Ast/VariableDecleration.hpp>
-#include <Nano/Ast/CodeBlock.hpp>
-#include <Nano/Ast/Function.hpp>
+#include <Nano/Ast/Node.hpp>
+#include <Nano/Ast/Visitor.hpp>
+
+namespace nano {
+   namespace ast {
+      class CodeBlockNode : public Node {
+      private:
+         std::vector<Node::PtrT> _list;
+
+      public:
+         inline CodeBlockNode(int line, int col)
+            : Node(line, col)
+         { }
+
+         inline std::vector<Node::PtrT>& list() {
+            return _list;
+         }
+
+         inline virtual void visit(Visitor* v) override {
+            v->accept(this);
+         }
+      };
+   }
+}

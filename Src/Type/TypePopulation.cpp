@@ -54,6 +54,21 @@ private:
          n->rhs()->visit(this);
       }
    }
+   
+   template<typename IterT>
+   void visitList(IterT begin, IterT end) {
+      for(; begin != end; ++begin) {
+         // Visit all children even in the case of hard errors to detect
+         // as many errors as possible.
+         if(state == ErrorState::HardError) {
+            state = ErrorState::NoError;
+            (*begin)->visit(this);
+            state = ErrorState::HardError;
+         } else {
+            (*begin)->visit(this);
+         }
+      }
+   }
 
    void makeResultType(BinaryExpressionNode* n, char const* op,
          Type::PtrT (Type::* fn)(Type::PtrT const&)) {
@@ -66,7 +81,8 @@ private:
             state = ErrorState::HardError;
             listener.onBinaryOperationError(n->pos(), lhs, rhs,
                boost::str(boost::format(
-                  "Can't apply operator %1% to values of types '%2%' and '%3%'")
+                  "Can't apply binary operator %1% to "
+                  "values of types '%2%' and '%3%'")
                   % op % lhs->typeString() % rhs->typeString()));
          }
       }
@@ -115,24 +131,32 @@ public:
       assert(false && "Not yet supported");
    }
 
-    // Other Expression AST:
-    virtual void accept(CallNode*) override {
+   // Other Expression AST:
+   virtual void accept(CallNode*) override {
       assert(false && "Not yet supported");
-    }
+   }
+
+   // Statement AST:
+   virtual void accept(CodeBlockNode* n) override {
+      visitList(n->list().begin(), n->list().end());
+   }
+
+   virtual void accept(FunctionDefinitionNode*) override {
+      assert(false && "Not yet supported");
+   }
 
    // Other:
    virtual void accept(ExpressionListNode* n) override {
-      for(Node::PtrT& cur : n->list()) {
-         // Visit all children even in the case of hard errors to detect
-         // as many errors as possible.
-         if(state == ErrorState::HardError) {
-            state = ErrorState::NoError;
-            cur->visit(this);
-            state = ErrorState::HardError;
-         } else {
-            cur->visit(this);
-         }
-      }
+      visitList(n->list().begin(), n->list().end());
+   }
+
+   virtual void accept(TypeNode*) override {
+   }
+
+   virtual void accept(VariableDeclerationNode*) override {
+   }
+
+   virtual void accept(VariableDeclerationListNode*) override {
    }
 };
 

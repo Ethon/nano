@@ -40,8 +40,15 @@ namespace nano {
       // Other Expression AST:
       class CallNode;
 
+      // Statement AST:
+      class CodeBlockNode;
+      class FunctionDefinitionNode;
+
       // Other:
       class ExpressionListNode;
+      class TypeNode;
+      class VariableDeclerationNode;
+      class VariableDeclerationListNode;
 
       struct Visitor {
          // Value AST:
@@ -62,8 +69,15 @@ namespace nano {
          // Other Expression AST:
          virtual void accept(CallNode*) = 0;
 
+         // Statement AST:
+         virtual void accept(CodeBlockNode*) = 0;
+         virtual void accept(FunctionDefinitionNode*) = 0;
+
          // Other:
          virtual void accept(ExpressionListNode*) = 0;
+         virtual void accept(TypeNode*) = 0;
+         virtual void accept(VariableDeclerationNode*) = 0;
+         virtual void accept(VariableDeclerationListNode*) = 0;
       };
    }
 }
