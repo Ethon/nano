@@ -61,6 +61,16 @@ namespace nano {
             return result;
          }
 
+         template<typename T>
+         void idup(std::size_t index) {
+            static_assert(std::is_pod<T>::value, "Only POD types permitted");
+            assert(stack.size() >= sizeof(T));
+            assert(index >= 0 && (stack.size() - sizeof(T)) >= index);
+            T val = *reinterpret_cast<T const*>(
+               &stack[index]);
+            push(val);
+         }
+
          std::size_t byteSize() const {
             return stack.size();
          }

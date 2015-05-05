@@ -27,9 +27,54 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/test/floating_point_comparison.hpp>
 
+// The following instructions are implicitly tested:
+// halt
+// framebegin, frameend
+// intpush
+// realpush
+
 ////////////////////////////////////////////////////////////////
 // INT INSTRUCTIONS
 ////////////////////////////////////////////////////////////////
+
+BOOST_AUTO_TEST_CASE(TestIntIdup) {
+   using namespace nano::vm;
+
+   // Test above the frame marker.
+   {
+      CodeBuilder builder;
+      builder.intpush(5);
+      builder.intpush(10);
+      builder.intidup(0);
+      builder.intidup(sizeof(Int));
+
+      VirtualMachine vm;
+      vm.exec(builder.buffer().code());
+      BOOST_REQUIRE_EQUAL(4 * sizeof(Int), vm.stack().byteSize());
+      BOOST_REQUIRE_EQUAL(10, vm.stack().pop<Int>());
+      BOOST_REQUIRE_EQUAL(5, vm.stack().pop<Int>());
+      BOOST_REQUIRE_EQUAL(10, vm.stack().pop<Int>());
+      BOOST_REQUIRE_EQUAL(5, vm.stack().top<Int>());
+   }
+
+   // .. and below the frame marker.
+   {
+      CodeBuilder builder;
+      builder.intpush(5);
+      builder.intpush(10);
+      builder.framestart();
+      builder.intidup(-StackIndexT(sizeof(Int) * 2));
+      builder.intidup(-StackIndexT(sizeof(Int)));
+
+      VirtualMachine vm;
+      vm.exec(builder.buffer().code());
+      BOOST_REQUIRE_EQUAL(4 * sizeof(Int), vm.stack().byteSize());
+      BOOST_REQUIRE_EQUAL(10, vm.stack().pop<Int>());
+      BOOST_REQUIRE_EQUAL(5, vm.stack().pop<Int>());
+      BOOST_REQUIRE_EQUAL(10, vm.stack().pop<Int>());
+      BOOST_REQUIRE_EQUAL(5, vm.stack().top<Int>());
+   }
+}
 
 BOOST_AUTO_TEST_CASE(TestIntAdd) {
    using namespace nano::vm;
@@ -104,6 +149,46 @@ BOOST_AUTO_TEST_CASE(TestIntPow) {
 ////////////////////////////////////////////////////////////////
 // REAL INSTRUCTIONS
 ////////////////////////////////////////////////////////////////
+
+BOOST_AUTO_TEST_CASE(TestRealIdup) {
+   using namespace nano::vm;
+
+   // Test above the frame marker.
+   {
+      CodeBuilder builder;
+      builder.realpush(5.0);
+      builder.realpush(10.0);
+      builder.realidup(0);
+      builder.realidup(sizeof(Real));
+      builder.halt();
+
+      VirtualMachine vm;
+      vm.exec(builder.buffer().code());
+      BOOST_REQUIRE_EQUAL(4 * sizeof(Real), vm.stack().byteSize());
+      BOOST_REQUIRE_CLOSE(10.0, vm.stack().pop<Real>(), 0.001);
+      BOOST_REQUIRE_CLOSE(5.0, vm.stack().pop<Real>(), 0.001);
+      BOOST_REQUIRE_CLOSE(10.0, vm.stack().pop<Real>(), 0.001);
+      BOOST_REQUIRE_CLOSE(5.0, vm.stack().pop<Real>(), 0.001);
+   }
+
+   // .. and below the frame marker.
+   {
+      CodeBuilder builder;
+      builder.realpush(5.0);
+      builder.realpush(10.0);
+      builder.framestart();
+      builder.realidup(-StackIndexT(sizeof(Real) * 2));
+      builder.realidup(-StackIndexT(sizeof(Real)));
+
+      VirtualMachine vm;
+      vm.exec(builder.buffer().code());
+      BOOST_REQUIRE_EQUAL(4 * sizeof(Real), vm.stack().byteSize());
+      BOOST_REQUIRE_CLOSE(10.0, vm.stack().pop<Real>(), 0.001);
+      BOOST_REQUIRE_CLOSE(5.0, vm.stack().pop<Real>(), 0.001);
+      BOOST_REQUIRE_CLOSE(10.0, vm.stack().pop<Real>(), 0.001);
+      BOOST_REQUIRE_CLOSE(5.0, vm.stack().pop<Real>(), 0.001);
+   }
+}
 
 BOOST_AUTO_TEST_CASE(TestRealAdd) {
    using namespace nano::vm;

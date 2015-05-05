@@ -27,5 +27,7 @@ namespace nano {
    namespace vm {
       using Int = std::int32_t;
       using Real = double;
+
+      using StackIndexT = std::ptrdiff_t;
    }
 }

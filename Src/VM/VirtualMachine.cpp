@@ -24,12 +24,23 @@
 // Nano:
 #include <Nano/VM/VirtualMachine.hpp>
 
-#include <iostream>
+nano::vm::VirtualMachine::VirtualMachine()
+   : stack_(), frameMarkers(1) {
+   frameMarkers[0] = 0;
+}
 
 void nano::vm::VirtualMachine::exec(const uint8_t* code) {
 
 #define PUSH_CODEARG(type) stack_.push(*reinterpret_cast<type const*>(code)); \
    code += sizeof(type);
+
+#define CONSUME_CODEARG(type) \
+   type codeArg = *reinterpret_cast<type const*>(code); \
+   code += sizeof(type);
+
+#define IDUP(type) assert(frameMarkers.size() > 0); \
+   CONSUME_CODEARG(StackIndexT) \
+   stack_.idup<type>(frameMarkers.back() + codeArg);
 
 #define POP_BINOP_ARGS(type) type rhs = stack_.pop<type>(); \
    type lhs = stack_.pop<type>();
@@ -51,10 +62,27 @@ start:
       }
 
       ////////////////////////////////////////////////////////////////
+      // FRAME INSTRUCTIONS
+      ////////////////////////////////////////////////////////////////
+      case op::framestart: {
+         frameMarkers.push_back(stack_.byteSize());
+         goto start;
+      }
+      case op::frameend: {
+         assert(frameMarkers.size() > 1);
+         frameMarkers.pop_back();
+         goto start;
+      }
+
+      ////////////////////////////////////////////////////////////////
       // INT INSTRUCTIONS
       ////////////////////////////////////////////////////////////////
       case op::intpush: {
          PUSH_CODEARG(Int)
+         goto start;
+      }
+      case op::intidup: {
+         IDUP(Int)
          goto start;
       }
       case op::intadd: {
@@ -86,6 +114,10 @@ start:
          PUSH_CODEARG(Real)
          goto start;
       }
+      case op::realidup: {
+         IDUP(Real)
+         goto start;
+      }
       case op::realadd: {
          SIMPLE_BINOP(Real, +)
          goto start;
@@ -107,7 +139,7 @@ start:
          stack_.push(Real(std::pow(lhs, rhs)));
          goto start;
       }
-      
+
       // Should never be reached.
       default:
          assert(false);
@@ -115,4 +147,8 @@ start:
 
 end:
 return;
+}
+
+nano::vm::Stack& nano::vm::VirtualMachine::stack() {
+   return stack_;
 }

@@ -31,13 +31,14 @@ namespace nano {
       class VirtualMachine {
       private:
          Stack stack_;
+         std::vector<StackIndexT> frameMarkers;
 
       public:
+         VirtualMachine();
+
          void exec(std::uint8_t const* code);
 
-         Stack const& stack() const {
-            return stack_;
-         }
+         Stack& stack();
       };
    }
 }

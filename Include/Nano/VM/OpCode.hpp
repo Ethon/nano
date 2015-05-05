@@ -33,9 +33,16 @@ namespace nano {
             halt,
 
             ////////////////////////////////////////////////////////////////
+            // FRAME INSTRUCTIONS
+            ////////////////////////////////////////////////////////////////
+            framestart,
+            frameend,
+
+            ////////////////////////////////////////////////////////////////
             // INT INSTRUCTIONS
             ////////////////////////////////////////////////////////////////
             intpush,
+            intidup,
             intadd,
             intsub,
             intmul,
@@ -46,6 +53,7 @@ namespace nano {
             // REAL INSTRUCTIONS
             ////////////////////////////////////////////////////////////////
             realpush,
+            realidup,
             realadd,
             realsub,
             realmul,

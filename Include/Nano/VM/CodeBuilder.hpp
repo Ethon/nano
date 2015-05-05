@@ -44,11 +44,27 @@ namespace nano {
          }
 
          ////////////////////////////////////////////////////////////////
+         // FRAME INSTRUCTIONS
+         ////////////////////////////////////////////////////////////////
+         inline void framestart() {
+            buffer_.put(op::framestart);
+         }
+
+         inline void frameend() {
+            buffer_.put(op::frameend);
+         }
+
+         ////////////////////////////////////////////////////////////////
          // INT INSTRUCTIONS
          ////////////////////////////////////////////////////////////////
          inline void intpush(Int value) {
             buffer_.put(op::intpush);
             buffer_.put(value);
+         }
+
+         inline void intidup(StackIndexT index) {
+            buffer_.put(op::intidup);
+            buffer_.put(index);
          }
 
          inline void intadd() {
@@ -77,6 +93,11 @@ namespace nano {
          inline void realpush(Real value) {
             buffer_.put(op::realpush);
             buffer_.put(value);
+         }
+
+         inline void realidup(StackIndexT index) {
+            buffer_.put(op::realidup);
+            buffer_.put(index);
          }
 
          inline void realadd() {
