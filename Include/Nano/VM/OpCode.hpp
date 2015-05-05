@@ -43,6 +43,7 @@ namespace nano {
             ////////////////////////////////////////////////////////////////
             intpush,
             intidup,
+            intfromreal,
             intadd,
             intsub,
             intmul,
@@ -54,6 +55,7 @@ namespace nano {
             ////////////////////////////////////////////////////////////////
             realpush,
             realidup,
+            realfromint,
             realadd,
             realsub,
             realmul,

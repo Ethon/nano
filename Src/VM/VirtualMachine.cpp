@@ -85,6 +85,10 @@ start:
          IDUP(Int)
          goto start;
       }
+      case op::intfromreal: {
+         stack_.push(Int(stack_.pop<Real>()));
+         goto start;
+      }
       case op::intadd: {
          SIMPLE_BINOP(Int, +)
          goto start;
@@ -116,6 +120,10 @@ start:
       }
       case op::realidup: {
          IDUP(Real)
+         goto start;
+      }
+      case op::realfromint: {
+         stack_.push(Real(stack_.pop<Int>()));
          goto start;
       }
       case op::realadd: {

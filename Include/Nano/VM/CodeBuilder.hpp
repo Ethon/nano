@@ -67,6 +67,10 @@ namespace nano {
             buffer_.put(index);
          }
 
+         inline void intfromreal() {
+            buffer_.put(op::intfromreal);
+         }
+
          inline void intadd() {
             buffer_.put(op::intadd);
          }
@@ -98,6 +102,10 @@ namespace nano {
          inline void realidup(StackIndexT index) {
             buffer_.put(op::realidup);
             buffer_.put(index);
+         }
+
+         inline void realfromint() {
+            buffer_.put(op::realfromint);
          }
 
          inline void realadd() {

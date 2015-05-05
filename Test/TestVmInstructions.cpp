@@ -76,6 +76,19 @@ BOOST_AUTO_TEST_CASE(TestIntIdup) {
    }
 }
 
+BOOST_AUTO_TEST_CASE(TestIntFromReal) {
+   using namespace nano::vm;
+
+   CodeBuilder builder;
+   builder.realpush(5.3);
+   builder.intfromreal();
+   builder.halt();
+
+   VirtualMachine vm;
+   vm.exec(builder.buffer().code());
+   BOOST_REQUIRE_EQUAL(5, vm.stack().top<Int>());
+}
+
 BOOST_AUTO_TEST_CASE(TestIntAdd) {
    using namespace nano::vm;
 
@@ -188,6 +201,19 @@ BOOST_AUTO_TEST_CASE(TestRealIdup) {
       BOOST_REQUIRE_CLOSE(10.0, vm.stack().pop<Real>(), 0.001);
       BOOST_REQUIRE_CLOSE(5.0, vm.stack().pop<Real>(), 0.001);
    }
+}
+
+BOOST_AUTO_TEST_CASE(TestRealFromInt) {
+   using namespace nano::vm;
+
+   CodeBuilder builder;
+   builder.intpush(5);
+   builder.realfromint();
+   builder.halt();
+
+   VirtualMachine vm;
+   vm.exec(builder.buffer().code());
+   BOOST_REQUIRE_CLOSE(5.0, vm.stack().top<Real>(), 0.001);
 }
 
 BOOST_AUTO_TEST_CASE(TestRealAdd) {
